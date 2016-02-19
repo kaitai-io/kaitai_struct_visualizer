@@ -67,6 +67,7 @@ class Node
       print " = #{@value}"
     elsif @value.is_a?(String)
       print ' = '
+      pos += 3
       @str_mode = detect_str_mode unless @str_mode
       case @str_mode
       when :str
@@ -74,7 +75,7 @@ class Node
       when :str_esc
         s = @value.inspect
       when :hex
-        s = s.bytes.map { |x| sprintf '%02X' }.join(' ')
+        s = @value.bytes.map { |x| sprintf '%02X', x }.join(' ')
       else
         raise "Invalid str_mode: #{@str_mode.inspect}"
       end
@@ -92,7 +93,11 @@ class Node
   ##
   # Empirically detects a mode that would be best to show a designated string
   def detect_str_mode
-    :str
+    if @value.encoding == Encoding::ASCII_8BIT
+      :hex
+    else
+      :str_esc
+    end
   end
 
   def explore
