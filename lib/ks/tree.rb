@@ -22,9 +22,6 @@ class Tree
       when :up_arrow
         @cur_line -= 1
         @cur_line = 0 if @cur_line < 0
-        if @cur_line - @cur_shift < 0
-          @cur_shift -= 1
-        end
       when :down_arrow
         @cur_line += 1
       when :right_arrow
@@ -40,6 +37,13 @@ class Tree
       when 'q'
         return
       end
+
+      if @cur_line - @cur_shift < 0
+        @cur_shift = @cur_line
+      end
+      if @cur_line - @cur_shift > @max_ln
+        @cur_shift = @cur_line - @max_ln
+      end
     }
   end
 
@@ -50,19 +54,20 @@ class Tree
   end
 
   def draw_rec(n)
-    return if @ln > @max_ln
+    scr_ln = @ln - @cur_shift
+    return if scr_ln > @max_ln
     if @ln == @cur_line
       @ui.bg_color = 7
       @ui.fg_color = 0
       @cur_node = n
     end
-    n.draw(@ui)
+    n.draw(@ui) if scr_ln >= 0
     @ui.reset_colors if @ln == @cur_line
     @ln += 1
     if n.open?
       n.children.each { |ch|
         draw_rec(ch)
-        break if @ln > @max_ln
+        break if scr_ln > @max_ln
       }
     end
   end
