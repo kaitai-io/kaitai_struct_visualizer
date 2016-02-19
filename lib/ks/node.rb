@@ -111,6 +111,7 @@ class Node
       }
     else
       # Gather seq attributes
+      attrs = Set.new
       @value.instance_variables.each { |k|
         k = k.to_s
         next if k =~ /^@_/
@@ -118,6 +119,7 @@ class Node
         n = Node.new(el, level + 1)
         n.id = k
         add(n)
+        attrs << k.gsub(/^@/, '')
       }
 
       # Gather instances
@@ -129,6 +131,7 @@ class Node
       inst_meths = Set.new(@value.public_methods) - common_meths
       inst_meths.each { |meth|
         k = meth.to_s
+        next if k =~ /^_/ or attrs.include?(k)
         n = Node.new(nil, level + 1, meth)
         n.id = k
         add(n)
