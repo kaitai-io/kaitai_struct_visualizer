@@ -1,13 +1,17 @@
 # coding: utf-8
+require 'set'
+
 class Node
   attr_accessor :id
   attr_reader :value
   attr_reader :level
   attr_reader :children
+  attr_accessor :parent
 
-  def initialize(value, level)
+  def initialize(value, level, value_method = nil)
     @value = value
     @level = level
+    @value_method = value_method
 
     @open = false
     @explored = false
@@ -17,10 +21,11 @@ class Node
 
   def add(child)
     @children << child
+    child.parent = self
   end
 
   def open?; @open; end
-  
+
   def openable?
     not (@value.is_a?(Fixnum) or @value.is_a?(String))      
   end
@@ -36,7 +41,7 @@ class Node
   def open
     return unless openable?
     explore
-    @open = true
+    @open = true if @explored
   end
 
   def close
@@ -45,7 +50,9 @@ class Node
 
   def draw(ui)
     print '  ' * level
-    print(if open?
+    print(if @value.nil?
+          '[?]'
+         elsif open?
           '[-]'
          elsif openable?
            '[+]'
@@ -90,7 +97,11 @@ class Node
 
   def explore
     return if @explored
-    if @value.is_a?(Fixnum) or @value.is_a?(String)
+
+    if @value.nil?
+      @value = @parent.value.send(@value_method)
+      return
+    elsif @value.is_a?(Fixnum) or @value.is_a?(String)
     # do nothing else
     elsif @value.is_a?(Array)
       @value.each_with_index { |el, i|
@@ -99,11 +110,26 @@ class Node
         add(n)
       }
     else
+      # Gather seq attributes
       @value.instance_variables.each { |k|
         k = k.to_s
         next if k =~ /^@_/
         el = @value.instance_eval(k)
         n = Node.new(el, level + 1)
+        n.id = k
+        add(n)
+      }
+
+      # Gather instances
+      common_meths = Set.new
+      @value.class.ancestors.each { |cl|
+        next if cl == @value.class
+        common_meths.merge(cl.instance_methods)
+      }
+      inst_meths = Set.new(@value.public_methods) - common_meths
+      inst_meths.each { |meth|
+        k = meth.to_s
+        n = Node.new(nil, level + 1, meth)
         n.id = k
         add(n)
       }
