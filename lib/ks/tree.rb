@@ -27,6 +27,14 @@ class Tree
         end
       when :down_arrow
         @cur_line += 1
+      when :right_arrow
+        if @cur_node.openable?
+          if @cur_node.open?
+            @cur_line += 1
+          else
+            @cur_node.open
+          end
+        end
       when :enter
         @cur_node.toggle
       when 'q'
