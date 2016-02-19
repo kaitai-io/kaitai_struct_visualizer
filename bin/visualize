@@ -1,0 +1,17 @@
+#!/usr/bin/env ruby
+
+full_bin_path = File.expand_path("#{Dir.pwd}/#{$PROGRAM_NAME}")
+dist_path = File.expand_path(File.dirname(full_bin_path) + '/..')
+
+$LOAD_PATH << "#{dist_path}/lib"
+$LOAD_PATH << "#{dist_path}/../kaitai-structures"
+
+require 'ks/visualizer'
+
+if ARGV.size != 2
+  puts "Usage: #{File.basename($PROGRAM_NAME)} <format.yaml> <file_to_parse.bin>"
+  exit 1
+end
+
+v = Visualizer.new(ARGV[0], ARGV[1])
+v.run
