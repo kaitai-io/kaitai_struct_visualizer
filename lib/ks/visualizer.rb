@@ -4,6 +4,10 @@ require 'tui'
 require 'ks_ruby_compiler'
 require 'ks/tree'
 
+# TODO: should be inside compiled files
+require 'zlib'
+require 'stringio'
+
 class Visualizer
   def initialize(format_fn, bin_fn)
     @format_fn = format_fn
