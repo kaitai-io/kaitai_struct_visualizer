@@ -6,7 +6,7 @@ class Tree
     @st = st
     @root = Node.new(st, 0)
     @root.id = '[root]'
-    @max_ln = @ui.rows - 3
+    @max_scr_ln = @ui.rows - 3
 
     @cur_line = 0
     @cur_shift = 0
@@ -15,7 +15,8 @@ class Tree
   def run
     c = nil
     loop {
-      redraw
+      t = redraw
+      puts "redraw time: #{t}"
       #puts "keypress: #{c.inspect}"
       c = @ui.read_char_mapped
       case c
@@ -41,8 +42,8 @@ class Tree
       if @cur_line - @cur_shift < 0
         @cur_shift = @cur_line
       end
-      if @cur_line - @cur_shift > @max_ln
-        @cur_shift = @cur_line - @max_ln
+      if @cur_line - @cur_shift > @max_scr_ln
+        @cur_shift = @cur_line - @max_scr_ln
       end
     }
   end
@@ -55,7 +56,7 @@ class Tree
 
   def draw_rec(n)
     scr_ln = @ln - @cur_shift
-    return if scr_ln > @max_ln
+    return if scr_ln > @max_scr_ln
     if @ln == @cur_line
       @ui.bg_color = 7
       @ui.fg_color = 0
@@ -67,7 +68,7 @@ class Tree
     if n.open?
       n.children.each { |ch|
         draw_rec(ch)
-        break if scr_ln > @max_ln
+        break if scr_ln > @max_scr_ln
       }
     end
   end
