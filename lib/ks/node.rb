@@ -27,7 +27,7 @@ class Node
   def open?; @open; end
 
   def openable?
-    not (@value.is_a?(Fixnum) or @value.is_a?(String))      
+    not (@value.is_a?(Fixnum) or @value.is_a?(String))
   end
 
   def toggle
