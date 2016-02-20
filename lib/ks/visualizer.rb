@@ -29,7 +29,7 @@ class Visualizer
       @compiler.compile
 
       require compiled_path
-      
+
       main_class_name = @compiler.type2class(@compiler.desc['meta']['id'])
       #puts "Main class: #{main_class_name}"
       main_class = Kernel::const_get(main_class_name)
