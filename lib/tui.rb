@@ -61,5 +61,9 @@ class TUI
     "\e[B" => :down_arrow,
     "\e[C" => :right_arrow,
     "\e[D" => :left_arrow,
+    "\e[5~" => :pg_up,
+    "\e[6~" => :pg_dn,
+    "\e[H" => :home,
+    "\e[F" => :end,
   }
 end
