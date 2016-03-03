@@ -1,4 +1,5 @@
 require 'ks/node'
+require 'benchmark'
 
 class Tree
   def initialize(ui, st)
@@ -16,28 +17,48 @@ class Tree
     c = nil
     loop {
       t = redraw
-      puts "redraw time: #{t}"
+      puts "all redraw time: #{t}, draw time: #{@draw_time}, ln: #{@ln}"
       #puts "keypress: #{c.inspect}"
       c = @ui.read_char_mapped
       case c
       when :up_arrow
         @cur_line -= 1
-        @cur_line = 0 if @cur_line < 0
+        @cur_node = nil
       when :down_arrow
         @cur_line += 1
+        @cur_node = nil
+      when :left_arrow
+        if @cur_node.open?
+          @cur_node.close
+        else
+          @cur_line = nil
+          @cur_node = @cur_node.parent
+        end
       when :right_arrow
         if @cur_node.openable?
           if @cur_node.open?
             @cur_line += 1
+            @cur_node = nil
           else
             @cur_node.open
           end
         end
+      when :home
+        @cur_line = @cur_shift = 0
+        @cur_node = nil
+      when :pg_up
+        @cur_line -= 20
+        @cur_node = nil
+      when :pg_dn
+        @cur_line += 20
+        @cur_node = nil
       when :enter
         @cur_node.toggle
       when 'q'
         return
       end
+
+      @cur_line = 0 if @cur_line < 0
 
       if @cur_line - @cur_shift < 0
         @cur_shift = @cur_line
@@ -49,20 +70,35 @@ class Tree
   end
 
   def redraw
-    @ui.clear
-    @ln = 0
-    draw_rec(@root)
+    @draw_time = 0
+    Benchmark.realtime {
+      @ui.clear
+      @ln = 0
+      draw_rec(@root)
+    }
   end
 
   def draw_rec(n)
     scr_ln = @ln - @cur_shift
-    return if scr_ln > @max_scr_ln
+   return if @cur_node and scr_ln > @max_scr_ln
+
     if @ln == @cur_line
+      # Seeking cur_node by cur_line
+      @cur_node = n
       @ui.bg_color = 7
       @ui.fg_color = 0
-      @cur_node = n
+    elsif @cur_node == n
+      # Seeking cur_line by cur_node
+      @cur_line = @ln
+      @ui.bg_color = 7
+      @ui.fg_color = 0
     end
-    n.draw(@ui) if scr_ln >= 0
+
+    @draw_time += Benchmark.realtime {
+#      n.draw(@ui) if scr_ln >= 0
+      n.draw(@ui) if scr_ln >= 0 and scr_ln <= @max_scr_ln
+    }
+
     @ui.reset_colors if @ln == @cur_line
     @ln += 1
     if n.open?
