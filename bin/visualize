@@ -7,12 +7,12 @@ $LOAD_PATH << "#{dist_path}/lib"
 $LOAD_PATH << "#{dist_path}/../kaitai-structures"
 $LOAD_PATH << "#{dist_path}/../kaitai_struct/runtime/ruby"
 
-require 'ks/visualizer'
+require 'ks/visualizer_main'
 
 if ARGV.size != 2
   puts "Usage: #{File.basename($PROGRAM_NAME)} <format.yaml> <file_to_parse.bin>"
   exit 1
 end
 
-v = Visualizer.new(ARGV[0], ARGV[1])
+v = ExternalCompilerVisualizer.new(ARGV[0], ARGV[1])
 v.run
