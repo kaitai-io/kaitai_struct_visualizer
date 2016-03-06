@@ -105,9 +105,10 @@ class Node
 
     if @value.nil?
       @value = @parent.value.send(@value_method)
-      return
-    elsif @value.is_a?(Fixnum) or @value.is_a?(String)
-    # do nothing else
+    end
+
+    if @value.is_a?(Fixnum) or @value.is_a?(String)
+      # do nothing else
     elsif @value.is_a?(Array)
       @value.each_with_index { |el, i|
         n = Node.new(el, level + 1)
