@@ -27,7 +27,7 @@ class Node
   def open?; @open; end
 
   def openable?
-    not (@value.is_a?(Fixnum) or @value.is_a?(String))
+    not (@value.is_a?(Fixnum) or @value.is_a?(String) or @value.is_a?(Symbol))
   end
 
   def toggle
@@ -64,6 +64,8 @@ class Node
     pos = 2 * level + 4 + @id.length
 
     if @value.is_a?(Fixnum)
+      print " = #{@value}"
+    elsif @value.is_a?(Symbol)
       print " = #{@value}"
     elsif @value.is_a?(String)
       print ' = '
@@ -107,7 +109,7 @@ class Node
       @value = @parent.value.send(@value_method)
     end
 
-    if @value.is_a?(Fixnum) or @value.is_a?(String)
+    if @value.is_a?(Fixnum) or @value.is_a?(String) or @value.is_a?(Symbol)
       # do nothing else
     elsif @value.is_a?(Array)
       @value.each_with_index { |el, i|
