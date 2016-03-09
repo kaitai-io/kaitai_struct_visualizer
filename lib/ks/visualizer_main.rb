@@ -10,7 +10,7 @@ class ExternalCompilerVisualizer < Visualizer
 
       require compiled_path
 
-      main_class_name = File.readlines(compiled_path).grep(/^class /)[0].strip.gsub(/^class /, '')
+      main_class_name = File.readlines(compiled_path).grep(/^class /)[0].strip.gsub(/^class /, '').gsub(/ <.*$/, '')
       main_class = Kernel::const_get(main_class_name)
       @data = main_class.from_file(@bin_fn)
     }
