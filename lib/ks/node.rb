@@ -87,6 +87,8 @@ class Node
         s += '…'
       end
       print s
+    elsif @value.is_a?(Array)
+      printf ' (%d = 0x%x entries)', @value.size, @value.size
     end
 
     puts
