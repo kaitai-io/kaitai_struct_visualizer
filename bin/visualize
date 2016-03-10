@@ -4,7 +4,6 @@ full_bin_path = File.expand_path("#{Dir.pwd}/#{$PROGRAM_NAME}")
 dist_path = File.expand_path(File.dirname(full_bin_path) + '/..')
 
 $LOAD_PATH << "#{dist_path}/lib"
-$LOAD_PATH << "#{dist_path}/../kaitai-structures"
 $LOAD_PATH << "#{dist_path}/../kaitai_struct/runtime/ruby"
 
 require 'ks/visualizer_main'
