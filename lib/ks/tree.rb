@@ -80,7 +80,7 @@ class Tree
 
   def draw_rec(n)
     scr_ln = @ln - @cur_shift
-   return if @cur_node and scr_ln > @max_scr_ln
+    return if @cur_node and scr_ln > @max_scr_ln
 
     if @ln == @cur_line
       # Seeking cur_node by cur_line
