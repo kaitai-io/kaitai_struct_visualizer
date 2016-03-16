@@ -30,6 +30,10 @@ class Node
     not (@value.is_a?(Fixnum) or @value.is_a?(String) or @value.is_a?(Symbol))
   end
 
+  def hex?
+    @value.is_a?(String)
+  end
+
   def toggle
     if @open
       close

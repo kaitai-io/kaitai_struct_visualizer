@@ -1,4 +1,5 @@
 require 'ks/node'
+require 'ks/hex_viewer'
 require 'benchmark'
 
 class Tree
@@ -53,7 +54,11 @@ class Tree
         @cur_line += 20
         @cur_node = nil
       when :enter
-        @cur_node.toggle
+        if @cur_node.hex?
+          HexViewer.new(@ui, @cur_node.value).run
+        else
+          @cur_node.toggle
+        end
       when 'q'
         return
       end
