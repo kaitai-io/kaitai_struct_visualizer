@@ -16,6 +16,7 @@ class HexViewer
   def addr; @addr; end
   def addr=(a)
     @addr = a
+    reset_cur
   end
 
   def reset_cur
@@ -33,6 +34,9 @@ class HexViewer
   def run
     c = nil
     loop {
+      @ui.goto(0, @max_scr_ln + 1)
+      printf "%06x (%d, %d)", @addr, @cur_x, @cur_y
+
       @ui.goto(col_to_col_char(@cur_x), @cur_y)
       c = @ui.read_char_mapped
       case c
