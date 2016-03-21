@@ -1,10 +1,26 @@
 class HexViewer
-  def initialize(ui, buf, shift_x = 0)
+  def initialize(ui, buf, shift_x = 0, tree = nil)
     @ui = ui
     @buf = buf
     @shift_x = shift_x
+    @tree = tree
 
+    @embedded = not(tree.nil?)
     @max_scr_ln = @ui.rows - 3
+
+    @addr = 0
+    reset_cur
+    raise if @cur_x.nil?
+  end
+
+  def addr; @addr; end
+  def addr=(a)
+    @addr = a
+  end
+
+  def reset_cur
+    @cur_y = addr_to_row(@addr)
+    @cur_x = addr_to_col(@addr)
   end
 
   def highlight(p1, p2)
@@ -17,11 +33,48 @@ class HexViewer
   def run
     c = nil
     loop {
-      @ui.clear
-      redraw
+      @ui.goto(col_to_col_char(@cur_x), @cur_y)
       c = @ui.read_char_mapped
       case c
+      when :tab
+        return if @embedded
+      when :left_arrow
+        if @addr > 0
+          @addr -= 1
+          @cur_x -= 1
+          if @cur_x < 0
+            @cur_y -= 1
+            @cur_x = PER_LINE - 1
+          end
+        end
+      when :right_arrow
+        if @addr < @buf.size
+          @addr += 1
+          @cur_x += 1
+          if @cur_x >= PER_LINE
+            @cur_y += 1
+            @cur_x = 0
+          end
+        end
+      when :up_arrow
+        @addr -= PER_LINE
+        if @addr < 0
+          @addr = 0
+          @cur_x = 0
+          @cur_y = 0
+        else
+          @cur_y -= 1
+        end
+      when :down_arrow
+        @addr += PER_LINE
+        if @addr >= @buf.size
+          @addr = @buf.size - 1
+          reset_cur
+        else
+          @cur_y += 1
+        end
       when 'q'
+        @tree.do_exit
         return
       end
     }

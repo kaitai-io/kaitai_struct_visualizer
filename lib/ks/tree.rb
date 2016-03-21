@@ -14,7 +14,7 @@ class Tree
 
     @st._io.seek(0)
     full_buf = @st._io.read_bytes_full
-    @hv = HexViewer.new(ui, full_buf, @hv_shift_x)
+    @hv = HexViewer.new(ui, full_buf, @hv_shift_x, self)
 
     @cur_line = 0
     @cur_shift = 0
@@ -26,11 +26,13 @@ class Tree
     loop {
       t = redraw
 
-      @hv.redraw
-      @hv.highlight(@cur_node.pos1, @cur_node.pos2)
+      thv = Benchmark.realtime {
+        @hv.redraw
+        @hv.highlight(@cur_node.pos1, @cur_node.pos2)
+      }
 
       @ui.goto(0, @max_scr_ln + 1)
-      print "all redraw time: #{t}, draw time: #{@draw_time}, ln: #{@ln}, "
+      printf "all: %d, tree: %d, tree_draw: %d, hexview: %d, ln: %d, ", (t + thv) * 1e6, t * 1e6, @draw_time * 1e6, thv * 1e6, @ln
       puts "highlight = #{@cur_node.pos1}..#{@cur_node.pos2}"
       #puts "keypress: #{c.inspect}"
 
@@ -97,6 +99,8 @@ class Tree
       else
         @cur_node.toggle
       end
+    when :tab
+      @hv.run
     when 'q'
       @do_exit = true
     end
@@ -140,6 +144,10 @@ class Tree
         break if scr_ln > @max_scr_ln
       }
     end
+  end
+
+  def do_exit
+    @do_exit = true
   end
 
   def self.explore_object(obj, level)
