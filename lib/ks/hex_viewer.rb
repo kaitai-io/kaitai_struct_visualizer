@@ -57,13 +57,7 @@ class HexViewer
       @ui.goto(@shift_x, row)
 
       hex = line.bytes.map { |x| sprintf('%02x', x) }.join(' ')
-      char = line.bytes.map { |x|
-        if x < 0x20
-          '.'
-        else
-          x.chr
-        end
-      }.join
+      char = line.bytes.map { |x| byte_to_display_char(x) }.join
 
       printf FMT, i, hex, char
       i += PER_LINE
@@ -74,7 +68,7 @@ class HexViewer
   def highlight_hide
     unless @hl_pos1.nil?
       highlight_draw_hex
-      #highlight_draw_char
+      highlight_draw_char
     end
   end
 
@@ -83,6 +77,7 @@ class HexViewer
       @ui.bg_color = 7
       @ui.fg_color = 0
       highlight_draw_hex
+      highlight_draw_char
       @ui.reset_colors
     end
   end
@@ -100,10 +95,38 @@ class HexViewer
       if c >= PER_LINE
         c = 0
         r += 1
-        return if r >= @max_scr_ln
+        return if r > @max_scr_ln
         @ui.goto(col_to_col_hex(c), r)
       end
       i += 1
+    end
+  end
+
+  def highlight_draw_char
+    r = addr_to_row(@hl_pos1)
+    c = addr_to_col(@hl_pos1)
+    i = @hl_pos1
+
+    @ui.goto(col_to_col_char(c), r)
+
+    while i < @hl_pos2
+      print byte_to_display_char(@buf[i].ord)
+      c += 1
+      if c >= PER_LINE
+        c = 0
+        r += 1
+        return if r > @max_scr_ln
+        @ui.goto(col_to_col_char(c), r)
+      end
+      i += 1
+    end
+  end
+
+  def byte_to_display_char(x)
+    if x < 0x20 or x > 0x7f
+      '.'
+    else
+      x.chr
     end
   end
 
