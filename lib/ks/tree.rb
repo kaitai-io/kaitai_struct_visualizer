@@ -24,9 +24,13 @@ class Tree
     c = nil
     loop {
       t = redraw
+
       @hv.redraw
+      @hv.highlight(@cur_node.pos1, @cur_node.pos2)
+
       @ui.goto(0, @max_scr_ln + 1)
-      puts "all redraw time: #{t}, draw time: #{@draw_time}, ln: #{@ln}"
+      print "all redraw time: #{t}, draw time: #{@draw_time}, ln: #{@ln}, "
+      puts "highlight = #{@cur_node.pos1}..#{@cur_node.pos2}"
       #puts "keypress: #{c.inspect}"
       c = @ui.read_char_mapped
       case c

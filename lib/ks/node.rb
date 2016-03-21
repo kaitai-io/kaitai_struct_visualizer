@@ -5,13 +5,17 @@ class Node
   attr_accessor :id
   attr_reader :value
   attr_reader :level
+  attr_reader :pos1
+  attr_reader :pos2
   attr_reader :children
   attr_accessor :parent
 
-  def initialize(value, level, value_method = nil)
+  def initialize(value, level, value_method = nil, pos1 = nil, pos2 = nil)
     @value = value
     @level = level
     @value_method = value_method
+    @pos1 = pos1
+    @pos2 = pos2
 
     @open = false
     @explored = false
@@ -141,7 +145,9 @@ class Node
         k = k.to_s
         next if k =~ /^@_/
         el = @value.instance_eval(k)
-        n = Node.new(el, level + 1)
+        aid = @value._debug[k[1..-1]]
+        raise "Unable to get debugging aid for '#{k}'" unless aid
+        n = Node.new(el, level + 1, nil, aid[:start], aid[:end])
         n.id = k
         add(n)
         attrs << k.gsub(/^@/, '')

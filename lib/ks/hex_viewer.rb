@@ -7,6 +7,13 @@ class HexViewer
     @max_scr_ln = @ui.rows - 3
   end
 
+  def highlight(p1, p2)
+    highlight_hide
+    @hl_pos1 = p1
+    @hl_pos2 = p2
+    highlight_show
+  end
+
   def run
     c = nil
     loop {
@@ -27,6 +34,16 @@ class HexViewer
   def self.line_width
     #6 + 2 + 3 * PER_LINE + 2 + PER_LINE
     10 + 4 * PER_LINE
+  end
+
+  def col_to_col_hex(c)
+    #6 + 2 + 3 * c
+    @shift_x + 8 + 3 * c
+  end
+
+  def col_to_col_char(c)
+    #6 + 2 + 3 * PER_LINE + 2
+    @shift_x + 10 + 3 * PER_LINE + c
   end
 
   def redraw
@@ -52,5 +69,48 @@ class HexViewer
       i += PER_LINE
       row += 1
     end
+  end
+
+  def highlight_hide
+    unless @hl_pos1.nil?
+      highlight_draw_hex
+      #highlight_draw_char
+    end
+  end
+
+  def highlight_show
+    unless @hl_pos1.nil?
+      @ui.bg_color = 7
+      @ui.fg_color = 0
+      highlight_draw_hex
+      @ui.reset_colors
+    end
+  end
+
+  def highlight_draw_hex
+    r = addr_to_row(@hl_pos1)
+    c = addr_to_col(@hl_pos1)
+    i = @hl_pos1
+
+    @ui.goto(col_to_col_hex(c), r)
+
+    while i < @hl_pos2
+      printf('%02x ', @buf[i].ord)
+      c += 1
+      if c > PER_LINE
+        c = 0
+        r += 1
+        @ui.goto(col_to_col_hex(c), r)
+      end
+      i += 1
+    end
+  end
+
+  def addr_to_row(addr)
+    addr / PER_LINE
+  end
+
+  def addr_to_col(addr)
+    addr % PER_LINE
   end
 end
