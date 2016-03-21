@@ -60,6 +60,7 @@ class TUI
   end
 
   KEY_MAP = {
+    "\t" => :tab,
     "\r" => :enter,
     "\e[A" => :up_arrow,
     "\e[B" => :down_arrow,
