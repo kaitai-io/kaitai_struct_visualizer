@@ -97,9 +97,10 @@ class HexViewer
     while i < @hl_pos2
       printf('%02x ', @buf[i].ord)
       c += 1
-      if c > PER_LINE
+      if c >= PER_LINE
         c = 0
         r += 1
+        return if r >= @max_scr_ln
         @ui.goto(col_to_col_hex(c), r)
       end
       i += 1
