@@ -75,17 +75,17 @@ class Node
       print ' = '
       pos += 3
       @str_mode = detect_str_mode unless @str_mode
+      max_len = ui.cols - pos
       case @str_mode
       when :str
-        s = @value
+        s = @value[0, max_len]
       when :str_esc
-        s = @value.inspect
+        s = @value.inspect[0, max_len]
       when :hex
-        s = @value.bytes.map { |x| sprintf '%02X', x }.join(' ')
+        s = first_n_bytes_dump(@value, max_len / 3 + 1)
       else
         raise "Invalid str_mode: #{@str_mode.inspect}"
       end
-      max_len = ui.cols - pos
       if s.length > max_len
         s = s[0, max_len - 1]
         s += '…'
@@ -96,6 +96,17 @@ class Node
     end
 
     puts
+  end
+
+  def first_n_bytes_dump(s, n)
+    i = 0
+    r = ''
+    s.each_byte { |x|
+      r << sprintf('%02x ', x)
+      i += 1
+      break if i >= n
+    }
+    r
   end
 
   ##
