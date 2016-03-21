@@ -21,6 +21,7 @@ class Visualizer
 
     main_class = Kernel::const_get(main_class_name)
     @data = main_class.from_file(@bin_fn)
+    @data._read
 
     @ui = TUI.new
     @tree = Tree.new(@ui, @data)

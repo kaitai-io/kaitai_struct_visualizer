@@ -4,7 +4,7 @@ class ExternalCompilerVisualizer < Visualizer
   def compile_format(fn)
     main_class_name = nil
     Dir.mktmpdir { |code_dir|
-      system("ksc -- -t ruby '#{fn}' -d '#{code_dir}'")
+      system("ksc -- --debug -t ruby '#{fn}' -d '#{code_dir}'")
       exit $?.exitstatus if $?.exitstatus != 0
 
       compiled_path = Dir.glob("#{code_dir}/*.rb")[0]
