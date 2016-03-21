@@ -100,6 +100,11 @@ class Tree
         @cur_node.toggle
       end
     when :tab
+      unless @cur_node.pos1.nil?
+        if (@hv.addr < @cur_node.pos1) or (@hv.addr >= @cur_node.pos2)
+          @hv.addr = @cur_node.pos1
+        end
+      end
       @hv.run
     when 'q'
       @do_exit = true
