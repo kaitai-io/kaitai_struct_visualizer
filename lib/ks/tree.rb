@@ -10,6 +10,12 @@ class Tree
     @root.id = '[root]'
     @max_scr_ln = @ui.rows - 3
 
+    @hv_shift_x = @ui.cols - HexViewer.line_width - 1
+
+    @st._io.seek(0)
+    full_buf = @st._io.read_bytes_full
+    @hv = HexViewer.new(ui, full_buf, @hv_shift_x)
+
     @cur_line = 0
     @cur_shift = 0
   end
@@ -18,6 +24,8 @@ class Tree
     c = nil
     loop {
       t = redraw
+      @hv.redraw
+      @ui.goto(0, @max_scr_ln + 1)
       puts "all redraw time: #{t}, draw time: #{@draw_time}, ln: #{@ln}"
       #puts "keypress: #{c.inspect}"
       c = @ui.read_char_mapped
