@@ -16,8 +16,11 @@ class TUI
     print @seq_clear
   end
 
+  ##
+  # Put the cursor up to screen position (x, y). First line is 0,
+  # first column is 0.
   def goto(x, y)
-    print `tput cup #{x} #{y}`
+    print `tput cup #{y} #{x}`
   end
 
   def fg_color=(col)
