@@ -18,6 +18,7 @@ class Tree
 
     @cur_line = 0
     @cur_shift = 0
+    @do_exit = false
   end
 
   def run
@@ -32,58 +33,73 @@ class Tree
       print "all redraw time: #{t}, draw time: #{@draw_time}, ln: #{@ln}, "
       puts "highlight = #{@cur_node.pos1}..#{@cur_node.pos2}"
       #puts "keypress: #{c.inspect}"
-      c = @ui.read_char_mapped
-      case c
-      when :up_arrow
-        @cur_line -= 1
-        @cur_node = nil
-      when :down_arrow
-        @cur_line += 1
-        @cur_node = nil
-      when :left_arrow
-        if @cur_node.open?
-          @cur_node.close
-        else
-          @cur_line = nil
-          @cur_node = @cur_node.parent
-        end
-      when :right_arrow
-        if @cur_node.openable?
-          if @cur_node.open?
-            @cur_line += 1
-            @cur_node = nil
-          else
-            @cur_node.open
-          end
-        end
-      when :home
-        @cur_line = @cur_shift = 0
-        @cur_node = nil
-      when :pg_up
-        @cur_line -= 20
-        @cur_node = nil
-      when :pg_dn
-        @cur_line += 20
-        @cur_node = nil
-      when :enter
-        if @cur_node.hex?
-          HexViewer.new(@ui, @cur_node.value).run
-        else
-          @cur_node.toggle
-        end
-      when 'q'
-        return
+
+      begin
+        process_keypress
+      rescue EOFError => e
+        @ui.message_box_exception(e)
+      rescue KaitaiStream::UnexpectedDataError => e
+        @ui.message_box_exception(e)
       end
 
-      @cur_line = 0 if @cur_line < 0
+      return if @do_exit
 
-      if @cur_line - @cur_shift < 0
-        @cur_shift = @cur_line
-      end
-      if @cur_line - @cur_shift > @max_scr_ln
-        @cur_shift = @cur_line - @max_scr_ln
+      if @cur_line
+        @cur_line = 0 if @cur_line < 0
+
+        if @cur_line - @cur_shift < 0
+          @cur_shift = @cur_line
+        end
+        if @cur_line - @cur_shift > @max_scr_ln
+          @cur_shift = @cur_line - @max_scr_ln
+        end
       end
     }
+  end
+
+  def process_keypress
+    c = @ui.read_char_mapped
+    case c
+    when :up_arrow
+      @cur_line -= 1
+      @cur_node = nil
+    when :down_arrow
+      @cur_line += 1
+      @cur_node = nil
+    when :left_arrow
+      if @cur_node.open?
+        @cur_node.close
+      else
+        @cur_line = nil
+        @cur_node = @cur_node.parent
+      end
+    when :right_arrow
+      if @cur_node.openable?
+        if @cur_node.open?
+          @cur_line += 1
+          @cur_node = nil
+        else
+          @cur_node.open
+        end
+      end
+    when :home
+      @cur_line = @cur_shift = 0
+      @cur_node = nil
+    when :pg_up
+      @cur_line -= 20
+      @cur_node = nil
+    when :pg_dn
+      @cur_line += 20
+      @cur_node = nil
+    when :enter
+      if @cur_node.hex?
+        HexViewer.new(@ui, @cur_node.value).run
+      else
+        @cur_node.toggle
+      end
+    when 'q'
+      @do_exit = true
+    end
   end
 
   def redraw
