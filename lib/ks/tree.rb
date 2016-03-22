@@ -28,9 +28,7 @@ class Tree
 
       thv = Benchmark.realtime {
         @hv.redraw
-        regs = [[@cur_node.pos1, @cur_node.pos2]]
-        par = @cur_node.parent
-        regs << [par.pos1, par.pos2] if par
+        regs = highlight_regions(4)
         @hv.highlight(regs)
       }
 
@@ -164,6 +162,17 @@ class Tree
 
   def do_exit
     @do_exit = true
+  end
+
+  def highlight_regions(max_levels)
+    node = @cur_node
+    r = []
+    max_levels.times { |i|
+      return r if node.nil?
+      r << [node.pos1, node.pos2]
+      node = node.parent
+    }
+    r
   end
 
   def self.explore_object(obj, level)
