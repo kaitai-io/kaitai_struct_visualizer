@@ -11,6 +11,8 @@ class TUI
 
     @seq_clear = `tput clear`
     @seq_sgr0 = `tput sgr0`
+    @seq_fgcolor = []
+    @seq_bgcolor = []
   end
 
   def clear
@@ -21,15 +23,16 @@ class TUI
   # Put the cursor up to screen position (x, y). First line is 0,
   # first column is 0.
   def goto(x, y)
-    print `tput cup #{y} #{x}`
+    #print `tput cup #{y} #{x}`
+    printf "\e[%d;%dH", y + 1, x + 1
   end
 
   def fg_color=(col)
-    print `tput setaf #{col}`
+    print @seq_fgcolor[col] ||= `tput setaf #{col}`
   end
 
   def bg_color=(col)
-    print `tput setab #{col}`
+    print @seq_bgcolor[col] ||= `tput setab #{col}`
   end
 
   def reset_colors
