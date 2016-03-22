@@ -92,7 +92,7 @@ class HexViewer
           @cur_y += 1
         end
       when 'q'
-        @tree.do_exit
+        @tree.do_exit if @tree
         return
       end
 
