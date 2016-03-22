@@ -157,10 +157,18 @@ class HexViewer
     }
   end
 
+  HIGHLIGHT_COLOR = [
+    :gray14,
+    :gray11,
+    :gray8,
+    :gray5,
+    :gray2,
+  ]
+
   def highlight_show
     each_highlight_region { |i, p1, p2|
-      @ui.bg_color = 7 - i
-      @ui.fg_color = 0
+      @ui.bg_color = HIGHLIGHT_COLOR[i]
+      @ui.fg_color = :black
       highlight_draw(p1, p2)
     }
     @ui.reset_colors

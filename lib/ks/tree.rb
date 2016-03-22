@@ -138,13 +138,13 @@ class Tree
     if @ln == @cur_line
       # Seeking cur_node by cur_line
       @cur_node = n
-      @ui.bg_color = 7
-      @ui.fg_color = 0
+      @ui.bg_color = :gray
+      @ui.fg_color = :black
     elsif @cur_node == n
       # Seeking cur_line by cur_node
       @cur_line = @ln
-      @ui.bg_color = 7
-      @ui.fg_color = 0
+      @ui.bg_color = :gray
+      @ui.fg_color = :black
     end
 
     @draw_time += Benchmark.realtime {
