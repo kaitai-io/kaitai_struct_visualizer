@@ -25,10 +25,9 @@ class HexViewer
     @cur_x = addr_to_col(@addr)
   end
 
-  def highlight(p1, p2)
+  def highlight(regions)
     highlight_hide
-    @hl_pos1 = p1
-    @hl_pos2 = p2
+    @hl_regions = regions
     highlight_show
   end
 
@@ -142,17 +141,29 @@ class HexViewer
     end
   end
 
+  def each_highlight_region
+    return if @hl_regions.nil?
+    n = @hl_regions.size
+    (n - 1).downto(0).each { |i|
+      p1 = @hl_regions[i][0]
+      p2 = @hl_regions[i][1]
+      yield i, p1, p2 unless p1.nil?
+    }
+  end
+
   def highlight_hide
-    highlight_draw(@hl_pos1, @hl_pos2) unless @hl_pos1.nil?
+    each_highlight_region { |i, p1, p2|
+      highlight_draw(p1, p2)
+    }
   end
 
   def highlight_show
-    unless @hl_pos1.nil?
-      @ui.bg_color = 7
+    each_highlight_region { |i, p1, p2|
+      @ui.bg_color = 7 - i
       @ui.fg_color = 0
-      highlight_draw(@hl_pos1, @hl_pos2)
-      @ui.reset_colors
-    end
+      highlight_draw(p1, p2)
+    }
+    @ui.reset_colors
   end
 
   def highlight_draw(p1, p2)

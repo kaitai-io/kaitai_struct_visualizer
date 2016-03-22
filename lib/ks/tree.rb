@@ -28,7 +28,10 @@ class Tree
 
       thv = Benchmark.realtime {
         @hv.redraw
-        @hv.highlight(@cur_node.pos1, @cur_node.pos2)
+        regs = [[@cur_node.pos1, @cur_node.pos2]]
+        par = @cur_node.parent
+        regs << [par.pos1, par.pos2] if par
+        @hv.highlight(regs)
       }
 
       @ui.goto(0, @max_scr_ln + 1)
