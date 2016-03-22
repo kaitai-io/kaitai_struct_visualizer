@@ -72,8 +72,11 @@ class Tree
       if @cur_node.open?
         @cur_node.close
       else
-        @cur_line = nil
-        @cur_node = @cur_node.parent
+        par = @cur_node.parent
+        if par
+          @cur_line = nil
+          @cur_node = par
+        end
       end
     when :right_arrow
       if @cur_node.openable?
