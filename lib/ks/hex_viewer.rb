@@ -204,7 +204,7 @@ class HexViewer
   end
 
   def byte_to_display_char(x)
-    if x < 0x20 or x > 0x7f
+    if x < 0x20 or x >= 0x7f
       '.'
     else
       x.chr
