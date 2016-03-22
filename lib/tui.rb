@@ -27,12 +27,47 @@ class TUI
     printf "\e[%d;%dH", y + 1, x + 1
   end
 
+  COLORS = {
+    :black => 0,
+    :gray => 7,
+    :gray0 => 232,
+    :gray1 => 233,
+    :gray2 => 234,
+    :gray3 => 235,
+    :gray4 => 236,
+    :gray5 => 237,
+    :gray6 => 238,
+    :gray7 => 239,
+    :gray8 => 240,
+    :gray9 => 241,
+    :gray10 => 242,
+    :gray11 => 243,
+    :gray12 => 244,
+    :gray13 => 245,
+    :gray14 => 246,
+    :gray15 => 247,
+    :gray16 => 248,
+    :gray17 => 249,
+    :gray18 => 250,
+    :gray19 => 251,
+    :gray20 => 252,
+    :gray21 => 253,
+    :gray22 => 254,
+    :gray23 => 255,
+  }
+
   def fg_color=(col)
-    print @seq_fgcolor[col] ||= `tput setaf #{col}`
+    #print @seq_fgcolor[col] ||= `tput setaf #{col}`
+    code = COLORS[col]
+    raise "Invalid color: #{col}" unless code
+    print "\e[38;5;#{code}m"
   end
 
   def bg_color=(col)
-    print @seq_bgcolor[col] ||= `tput setab #{col}`
+    #print @seq_bgcolor[col] ||= `tput setab #{col}`
+    code = COLORS[col]
+    raise "Invalid color: #{col}" unless code
+    print "\e[48;5;#{code}m"
   end
 
   def reset_colors
