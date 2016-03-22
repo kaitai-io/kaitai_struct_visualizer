@@ -133,8 +133,10 @@ class Node
     if @value.is_a?(Fixnum) or @value.is_a?(String) or @value.is_a?(Symbol)
       # do nothing else
     elsif @value.is_a?(Array)
+      aid = @parent.value._debug[@id][:arr]
+      raise "Unable to get debugging aid for array: #{@parent.value._debug[@id].inspect}" unless aid
       @value.each_with_index { |el, i|
-        n = Node.new(el, level + 1)
+        n = Node.new(el, level + 1, nil, aid[i][:start], aid[i][:end])
         n.id = i.to_s
         add(n)
       }
