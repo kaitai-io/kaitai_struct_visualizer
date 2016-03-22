@@ -143,38 +143,38 @@ class HexViewer
   end
 
   def highlight_hide
-    highlight_draw unless @hl_pos1.nil?
+    highlight_draw(@hl_pos1, @hl_pos2) unless @hl_pos1.nil?
   end
 
   def highlight_show
     unless @hl_pos1.nil?
       @ui.bg_color = 7
       @ui.fg_color = 0
-      highlight_draw
+      highlight_draw(@hl_pos1, @hl_pos2)
       @ui.reset_colors
     end
   end
 
-  def highlight_draw
-    r = row_to_scr(addr_to_row(@hl_pos1))
+  def highlight_draw(p1, p2)
+    r = row_to_scr(addr_to_row(p1))
     return if r > @max_scr_ln
     if r < 0
       c = 0
       r = 0
       i = row_col_to_addr(@scroll_y, 0)
-      return if i >= @hl_pos2
+      return if i >= p2
     else
-      c = addr_to_col(@hl_pos1)
-      i = @hl_pos1
+      c = addr_to_col(p1)
+      i = p1
     end
 
-    highlight_draw_hex(r, c, i)
-    highlight_draw_char(r, c, i)
+    highlight_draw_hex(r, c, i, p2)
+    highlight_draw_char(r, c, i, p2)
   end
 
-  def highlight_draw_hex(r, c, i)
+  def highlight_draw_hex(r, c, i, p2)
     @ui.goto(col_to_col_hex(c), r)
-    while i < @hl_pos2
+    while i < p2
       printf('%02x ', @buf[i].ord)
       c += 1
       if c >= PER_LINE
@@ -187,10 +187,10 @@ class HexViewer
     end
   end
 
-  def highlight_draw_char(r, c, i)
+  def highlight_draw_char(r, c, i, p2)
     @ui.goto(col_to_col_char(c), r)
 
-    while i < @hl_pos2
+    while i < p2
       print byte_to_display_char(@buf[i].ord)
       c += 1
       if c >= PER_LINE
