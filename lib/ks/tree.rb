@@ -95,7 +95,12 @@ class Tree
       @cur_node = nil
     when :enter
       if @cur_node.hex?
-        HexViewer.new(@ui, @cur_node.value).run
+        @ui.clear
+        hv = HexViewer.new(@ui, @cur_node.value)
+        hv.redraw
+        hv.run
+        @ui.clear
+        redraw
       else
         @cur_node.toggle
       end
