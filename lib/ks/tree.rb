@@ -27,6 +27,13 @@ class Tree
       t = redraw
 
       thv = Benchmark.realtime {
+        unless @cur_node.pos1.nil?
+          if (@hv.addr < @cur_node.pos1) or (@hv.addr >= @cur_node.pos2)
+            @hv.addr = @cur_node.pos1
+            @hv.ensure_visible
+          end
+        end
+
         @hv.redraw
         regs = highlight_regions(4)
         @hv.highlight(regs)
@@ -109,11 +116,6 @@ class Tree
         @cur_node.toggle
       end
     when :tab
-      unless @cur_node.pos1.nil?
-        if (@hv.addr < @cur_node.pos1) or (@hv.addr >= @cur_node.pos2)
-          @hv.addr = @cur_node.pos1
-        end
-      end
       @hv.run
     when 'q'
       @do_exit = true
