@@ -9,6 +9,7 @@ class HexViewer
     @max_scr_ln = @ui.rows - 3
 
     @addr = 0
+    @scroll_y = 0
     reset_cur
     raise if @cur_x.nil?
   end
@@ -31,13 +32,26 @@ class HexViewer
     highlight_show
   end
 
+  def ensure_visible
+    scr_y = row_to_scr(@cur_y)
+    if scr_y < 0
+      @scroll_y = @cur_y
+      redraw
+      highlight_show
+    elsif scr_y > @max_scr_ln
+      @scroll_y = @cur_y - @max_scr_ln
+      redraw
+      highlight_show
+    end
+  end
+
   def run
     c = nil
     loop {
       @ui.goto(0, @max_scr_ln + 1)
       printf "%06x (%d, %d)", @addr, @cur_x, @cur_y
 
-      @ui.goto(col_to_col_char(@cur_x), @cur_y)
+      @ui.goto(col_to_col_char(@cur_x), row_to_scr(@cur_y))
       c = @ui.read_char_mapped
       case c
       when :tab
@@ -81,6 +95,8 @@ class HexViewer
         @tree.do_exit
         return
       end
+
+      ensure_visible
     }
   end
 
@@ -103,8 +119,12 @@ class HexViewer
     @shift_x + 10 + 3 * PER_LINE + c
   end
 
+  def row_to_scr(r)
+    r - @scroll_y
+  end
+
   def redraw
-    i = 0
+    i = row_col_to_addr(@scroll_y, 0)
     row = 0
 
     while row <= @max_scr_ln do
@@ -123,29 +143,37 @@ class HexViewer
   end
 
   def highlight_hide
-    unless @hl_pos1.nil?
-      highlight_draw_hex
-      highlight_draw_char
-    end
+    highlight_draw unless @hl_pos1.nil?
   end
 
   def highlight_show
     unless @hl_pos1.nil?
       @ui.bg_color = 7
       @ui.fg_color = 0
-      highlight_draw_hex
-      highlight_draw_char
+      highlight_draw
       @ui.reset_colors
     end
   end
 
-  def highlight_draw_hex
-    r = addr_to_row(@hl_pos1)
-    c = addr_to_col(@hl_pos1)
-    i = @hl_pos1
+  def highlight_draw
+    r = row_to_scr(addr_to_row(@hl_pos1))
+    return if r > @max_scr_ln
+    if r < 0
+      c = 0
+      r = 0
+      i = row_col_to_addr(@scroll_y, 0)
+      return if i >= @hl_pos2
+    else
+      c = addr_to_col(@hl_pos1)
+      i = @hl_pos1
+    end
 
+    highlight_draw_hex(r, c, i)
+    highlight_draw_char(r, c, i)
+  end
+
+  def highlight_draw_hex(r, c, i)
     @ui.goto(col_to_col_hex(c), r)
-
     while i < @hl_pos2
       printf('%02x ', @buf[i].ord)
       c += 1
@@ -159,11 +187,7 @@ class HexViewer
     end
   end
 
-  def highlight_draw_char
-    r = addr_to_row(@hl_pos1)
-    c = addr_to_col(@hl_pos1)
-    i = @hl_pos1
-
+  def highlight_draw_char(r, c, i)
     @ui.goto(col_to_col_char(c), r)
 
     while i < @hl_pos2
@@ -193,5 +217,9 @@ class HexViewer
 
   def addr_to_col(addr)
     addr % PER_LINE
+  end
+
+  def row_col_to_addr(row, col)
+    row * PER_LINE + col
   end
 end
