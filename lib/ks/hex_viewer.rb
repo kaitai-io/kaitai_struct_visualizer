@@ -14,6 +14,10 @@ class HexViewer
     raise if @cur_x.nil?
   end
 
+  def buf=(buf)
+    @buf = buf
+  end
+
   def addr; @addr; end
   def addr=(a)
     @addr = a

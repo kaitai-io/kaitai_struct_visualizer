@@ -126,6 +126,20 @@ class Node
     end
   end
 
+  def io
+    return @io if @io
+
+    if @parent.nil?
+      @io = @value._io
+    else
+      obj = @parent
+      while not obj.value.respond_to?(:_io)
+        obj = obj.parent
+      end
+      @io = obj.value._io
+    end
+  end
+
   def explore
     return if @explored
 

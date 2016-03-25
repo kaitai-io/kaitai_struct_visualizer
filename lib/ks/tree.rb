@@ -12,9 +12,8 @@ class Tree
 
     @hv_shift_x = @ui.cols - HexViewer.line_width - 1
 
-    @st._io.seek(0)
-    full_buf = @st._io.read_bytes_full
-    @hv = HexViewer.new(ui, full_buf, @hv_shift_x, self)
+    @cur_io = nil
+    @hv = HexViewer.new(ui, nil, @hv_shift_x, self)
 
     @cur_line = 0
     @cur_shift = 0
@@ -27,6 +26,8 @@ class Tree
       t = redraw
 
       thv = Benchmark.realtime {
+        hv_update_io
+
         unless @cur_node.pos1.nil?
           if (@hv.addr < @cur_node.pos1) or (@hv.addr >= @cur_node.pos2)
             @hv.addr = @cur_node.pos1
@@ -164,6 +165,18 @@ class Tree
 
   def do_exit
     @do_exit = true
+  end
+
+  def hv_update_io
+    io = @cur_node.io
+    if io != @cur_io
+      @cur_io = io
+      io.seek(0)
+      buf = io.read_bytes_full
+      @hv.buf = buf
+
+#      @hv.redraw
+    end
   end
 
   def highlight_regions(max_levels)
