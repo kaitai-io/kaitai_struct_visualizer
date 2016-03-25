@@ -14,8 +14,11 @@ class Node
     @value = value
     @level = level
     @value_method = value_method
-    @pos1 = pos1
-    @pos2 = pos2
+
+    unless pos1.nil? or pos2.nil?
+      @pos1 = pos1
+      @pos2 = pos2
+    end
 
     @open = false
     @explored = false

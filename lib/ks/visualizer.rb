@@ -21,10 +21,21 @@ class Visualizer
 
     main_class = Kernel::const_get(main_class_name)
     @data = main_class.from_file(@bin_fn)
-    @data._read
+
+    load_exc = nil
+    begin
+      @data._read
+    rescue EOFError => e
+      load_exc = e
+    rescue KaitaiStream::UnexpectedDataError => e
+      load_exc = e
+    end
 
     @ui = TUI.new
     @tree = Tree.new(@ui, @data)
+
+    @tree.redraw
+    @ui.message_box_exception(load_exc) if load_exc
   end
 
   def run
