@@ -34,7 +34,13 @@ class Node
   def open?; @open; end
 
   def openable?
-    not (@value.is_a?(Fixnum) or @value.is_a?(String) or @value.is_a?(Symbol))
+    not (
+      @value.is_a?(Fixnum) or
+      @value.is_a?(String) or
+      @value.is_a?(Symbol) or
+      @value === true or
+      @value === false
+    )
   end
 
   def hex?
@@ -98,6 +104,8 @@ class Node
         s += '…'
       end
       print s
+    elsif @value === true or @value === false
+      print " = #{@value}"
     elsif @value.is_a?(Array)
       printf ' (%d = 0x%x entries)', @value.size, @value.size
     end
