@@ -198,7 +198,9 @@ class HexViewer
   def highlight_draw_hex(r, c, i, p2)
     @ui.goto(col_to_col_hex(c), r)
     while i < p2
-      printf('%02x ', @buf[i].ord)
+      v = byte_at(i)
+      return if v.nil?
+      printf('%02x ', v)
       c += 1
       if c >= PER_LINE
         c = 0
@@ -214,7 +216,9 @@ class HexViewer
     @ui.goto(col_to_col_char(c), r)
 
     while i < p2
-      print byte_to_display_char(@buf[i].ord)
+      v = byte_at(i)
+      return if v.nil?
+      print byte_to_display_char(v)
       c += 1
       if c >= PER_LINE
         c = 0
@@ -223,6 +227,15 @@ class HexViewer
         @ui.goto(col_to_col_char(c), r)
       end
       i += 1
+    end
+  end
+
+  def byte_at(i)
+    v = @buf[i]
+    if v.nil?
+      nil
+    else
+      v.ord
     end
   end
 
