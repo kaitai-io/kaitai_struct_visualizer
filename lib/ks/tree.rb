@@ -14,6 +14,7 @@ class Tree
 
     @cur_io = nil
     @hv = HexViewer.new(ui, nil, @hv_shift_x, self)
+    @hv_hidden = false
 
     @cur_line = 0
     @cur_shift = 0
@@ -26,18 +27,20 @@ class Tree
       t = redraw
 
       thv = Benchmark.realtime {
-        hv_update_io
+        unless @hv_hidden
+          hv_update_io
 
-        unless @cur_node.pos1.nil?
-          if (@hv.addr < @cur_node.pos1) or (@hv.addr >= @cur_node.pos2)
-            @hv.addr = @cur_node.pos1
-            @hv.ensure_visible
+          unless @cur_node.pos1.nil?
+            if (@hv.addr < @cur_node.pos1) or (@hv.addr >= @cur_node.pos2)
+              @hv.addr = @cur_node.pos1
+              @hv.ensure_visible
+            end
           end
-        end
 
-        @hv.redraw
-        regs = highlight_regions(4)
-        @hv.highlight(regs)
+          @hv.redraw
+          regs = highlight_regions(4)
+          @hv.highlight(regs)
+        end
       }
 
       @ui.goto(0, @max_scr_ln + 1)
@@ -118,6 +121,10 @@ class Tree
       end
     when :tab
       @hv.run
+    when 'H'
+      @hv_hidden = !@hv_hidden
+      @ui.clear
+      redraw
     when 'q'
       @do_exit = true
     end
@@ -191,7 +198,11 @@ class Tree
   end
 
   def tree_width
-    @hv_shift_x
+    if @hv_hidden
+      @ui.cols
+    else
+      @hv_shift_x
+    end
   end
 
   def self.explore_object(obj, level)
