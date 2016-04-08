@@ -163,9 +163,13 @@ class Node
       raise "Unable to get debugging aid for array: #{@parent.value._debug.inspect} using ID '#{clean_id}'" unless debug_el
       aid = debug_el[:arr]
       raise "Unable to get debugging aid for array: #{debug_el.inspect}" unless aid
+
+      max_val_digits = @value.size.to_s.size
+      fmt = "%#{max_val_digits}d"
+
       @value.each_with_index { |el, i|
         n = Node.new(el, level + 1, nil, aid[i][:start], aid[i][:end])
-        n.id = i.to_s
+        n.id = sprintf(fmt, i)
         add(n)
       }
     else
