@@ -79,21 +79,20 @@ class HexViewer
         end
       when :up_arrow
         @addr -= PER_LINE
-        if @addr < 0
-          @addr = 0
-          @cur_x = 0
-          @cur_y = 0
-        else
-          @cur_y -= 1
-        end
+        @cur_y -= 1
+        clamp_cursor
       when :down_arrow
         @addr += PER_LINE
-        if @addr >= @buf.size
-          @addr = @buf.size - 1
-          reset_cur
-        else
-          @cur_y += 1
-        end
+        @cur_y += 1
+        clamp_cursor
+      when :pg_dn
+        @addr += PER_LINE * PAGE_ROWS
+        @cur_y += PAGE_ROWS
+        clamp_cursor
+      when :pg_up
+        @addr -= PER_LINE * PAGE_ROWS
+        @cur_y -= PAGE_ROWS
+        clamp_cursor
       when 'q'
         @tree.do_exit if @tree
         return
@@ -103,8 +102,20 @@ class HexViewer
     }
   end
 
+  def clamp_cursor
+    if @addr < 0
+      @addr = 0
+      @cur_x = 0
+      @cur_y = 0
+    elsif @addr >= @buf.size
+      @addr = @buf.size - 1
+      reset_cur
+    end
+  end
+
   PER_LINE = 16
   PER_GROUP = 4
+  PAGE_ROWS = 20
   FMT = "%06x: %-#{PER_LINE * 3}s| %s\n"
 
   def self.line_width
