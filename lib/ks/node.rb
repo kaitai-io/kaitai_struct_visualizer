@@ -176,8 +176,15 @@ class Node
         next if k =~ /^@_/
         el = @value.instance_eval(k)
         aid = @value._debug[k[1..-1]]
-        raise "Unable to get debugging aid for '#{k}'" unless aid
-        n = Node.new(el, level + 1, nil, aid[:start], aid[:end])
+        if aid
+          aid_s = aid[:start]
+          aid_e = aid[:end]
+        else
+          #raise "Unable to get debugging aid for '#{k}'"
+          aid_s = nil
+          aid_e = nil
+        end
+        n = Node.new(el, level + 1, nil, aid_s, aid_e)
         n.id = k
         add(n)
         attrs << k.gsub(/^@/, '')
