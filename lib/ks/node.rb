@@ -10,7 +10,8 @@ class Node
   attr_reader :children
   attr_accessor :parent
 
-  def initialize(value, level, value_method = nil, pos1 = nil, pos2 = nil)
+  def initialize(tree, value, level, value_method = nil, pos1 = nil, pos2 = nil)
+    @tree = tree
     @value = value
     @level = level
     @value_method = value_method
@@ -168,7 +169,7 @@ class Node
       fmt = "%#{max_val_digits}d"
 
       @value.each_with_index { |el, i|
-        n = Node.new(el, level + 1, nil, aid[i][:start], aid[i][:end])
+        n = Node.new(@tree, el, level + 1, nil, aid[i][:start], aid[i][:end])
         n.id = sprintf(fmt, i)
         add(n)
       }
@@ -188,7 +189,7 @@ class Node
           aid_s = nil
           aid_e = nil
         end
-        n = Node.new(el, level + 1, nil, aid_s, aid_e)
+        n = Node.new(@tree, el, level + 1, nil, aid_s, aid_e)
         n.id = k
         add(n)
         attrs << k.gsub(/^@/, '')
@@ -204,7 +205,7 @@ class Node
       inst_meths.each { |meth|
         k = meth.to_s
         next if k =~ /^_/ or attrs.include?(k)
-        n = Node.new(nil, level + 1, meth)
+        n = Node.new(@tree, nil, level + 1, meth)
         n.id = k
         add(n)
       }

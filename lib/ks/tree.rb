@@ -6,7 +6,7 @@ class Tree
   def initialize(ui, st)
     @ui = ui
     @st = st
-    @root = Node.new(st, 0)
+    @root = Node.new(self, st, 0)
     @root.id = '[root]'
     @max_scr_ln = @ui.rows - 3
 
