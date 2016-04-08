@@ -89,7 +89,7 @@ class Node
       print ' = '
       pos += 3
       @str_mode = detect_str_mode unless @str_mode
-      max_len = ui.cols - pos
+      max_len = @tree.tree_width - pos
       case @str_mode
       when :str
         s = @value[0, max_len]

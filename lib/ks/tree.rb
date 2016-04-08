@@ -190,6 +190,10 @@ class Tree
     r
   end
 
+  def tree_width
+    @hv_shift_x
+  end
+
   def self.explore_object(obj, level)
     root = Node.new(obj, level)
     if obj.is_a?(Fixnum) or obj.is_a?(String)
