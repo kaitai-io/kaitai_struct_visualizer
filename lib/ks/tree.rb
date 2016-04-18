@@ -26,6 +26,16 @@ class Tree
     loop {
       t = redraw
 
+      if @cur_node.nil? and not @cur_line.nil?
+        # gone beyond the end of the tree
+        @cur_line = @root.height - 1
+        clamp_cursor
+        redraw
+      end
+
+      raise '@cur_line is undetermined' if @cur_line.nil?
+      raise '@cur_node is undetermined' if @cur_node.nil?
+
       thv = Benchmark.realtime {
         unless @hv_hidden
           hv_update_io
@@ -58,16 +68,7 @@ class Tree
 
       return if @do_exit
 
-      if @cur_line
-        @cur_line = 0 if @cur_line < 0
-
-        if @cur_line - @cur_shift < 0
-          @cur_shift = @cur_line
-        end
-        if @cur_line - @cur_shift > @max_scr_ln
-          @cur_shift = @cur_line - @max_scr_ln
-        end
-      end
+      clamp_cursor
     }
   end
 
@@ -130,6 +131,19 @@ class Tree
       redraw
     when 'q'
       @do_exit = true
+    end
+  end
+
+  def clamp_cursor
+    if @cur_line
+      @cur_line = 0 if @cur_line < 0
+
+      if @cur_line - @cur_shift < 0
+        @cur_shift = @cur_line
+      end
+      if @cur_line - @cur_shift > @max_scr_ln
+        @cur_shift = @cur_line - @max_scr_ln
+      end
     end
   end
 
