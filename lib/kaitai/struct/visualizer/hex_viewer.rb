@@ -1,3 +1,6 @@
+require 'kaitai/struct/visualizer/version'
+
+module Kaitai::Struct::Visualizer
 class HexViewer
   def initialize(ui, buf, shift_x = 0, tree = nil)
     @ui = ui
@@ -287,4 +290,5 @@ class HexViewer
   def row_col_to_addr(row, col)
     row * PER_LINE + col
   end
+end
 end

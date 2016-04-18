@@ -1,6 +1,8 @@
 # coding: utf-8
 require 'io/console'
 
+module Kaitai
+
 class TUI
   attr_reader :cols
   attr_reader :rows
@@ -162,4 +164,6 @@ class TUI
     goto(x, y)
     puts "[ #{caption} ]"
   end
+end
+
 end

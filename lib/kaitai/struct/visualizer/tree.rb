@@ -1,7 +1,10 @@
-require 'ks/node'
-require 'ks/hex_viewer'
 require 'benchmark'
 
+require 'kaitai/struct/visualizer/version'
+require 'kaitai/struct/visualizer/node'
+require 'kaitai/struct/visualizer/hex_viewer'
+
+module Kaitai::Struct::Visualizer
 class Tree
   def initialize(ui, st)
     @ui = ui
@@ -246,4 +249,5 @@ class Tree
     end
     root
   end
+end
 end

@@ -1,6 +1,9 @@
 # coding: utf-8
 require 'set'
 
+require 'kaitai/struct/visualizer/version'
+
+module Kaitai::Struct::Visualizer
 class Node
   attr_accessor :id
   attr_reader :value
@@ -235,4 +238,5 @@ class Node
     end
     n
   end
+end
 end

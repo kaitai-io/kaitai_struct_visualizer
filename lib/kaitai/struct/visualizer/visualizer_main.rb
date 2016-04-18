@@ -1,4 +1,7 @@
-require 'ks/visualizer'
+require 'kaitai/struct/visualizer/version'
+require 'kaitai/struct/visualizer/visualizer'
+
+module Kaitai::Struct::Visualizer
 
 class ExternalCompilerVisualizer < Visualizer
   def compile_format(fn)
@@ -16,4 +19,6 @@ class ExternalCompilerVisualizer < Visualizer
 
     return main_class_name
   end
+end
+
 end

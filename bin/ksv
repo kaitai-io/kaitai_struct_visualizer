@@ -1,17 +1,20 @@
 #!/usr/bin/env ruby
 
+# Some additional magic to make it work right after repo checkout,
+# without installation to proper Ruby library dirs
+
 full_bin_path = File.realpath($PROGRAM_NAME)
 dist_path = File.expand_path(File.dirname(full_bin_path) + '/..')
 
 $LOAD_PATH << "#{dist_path}/lib"
 $LOAD_PATH << "#{dist_path}/../kaitai_struct/runtime/ruby"
 
-require 'ks/visualizer_main'
+require 'kaitai/struct/visualizer'
 
 if ARGV.size < 2
   puts "Usage: #{File.basename($PROGRAM_NAME)} <file_to_parse.bin> <format.yaml>..."
   exit 1
 end
 
-v = ExternalCompilerVisualizer.new(ARGV[0], ARGV[1..-1])
+v = Kaitai::Struct::Visualizer::ExternalCompilerVisualizer.new(ARGV[0], ARGV[1..-1])
 v.run
