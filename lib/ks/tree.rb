@@ -102,6 +102,9 @@ class Tree
     when :home
       @cur_line = @cur_shift = 0
       @cur_node = nil
+    when :end
+      @cur_line = @root.height - 1
+      @cur_node = nil
     when :pg_up
       @cur_line -= 20
       @cur_node = nil
