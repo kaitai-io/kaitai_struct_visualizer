@@ -212,4 +212,27 @@ class Node
     end
     @explored = true
   end
+
+  ##
+  # Determine total height of an element, including all children if
+  # it's open and visible
+  def height
+    if @open
+      r = 1
+      @children.each { |n| r += n.height }
+      r
+    else
+      1
+    end
+  end
+
+  ##
+  # Find out last (deepest) descendant of current node
+  def last_descendant
+    n = self
+    while n.open?
+      n = n.children.last
+    end
+    n
+  end
 end
