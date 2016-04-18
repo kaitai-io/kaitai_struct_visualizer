@@ -93,6 +93,24 @@ class HexViewer
         @addr -= PER_LINE * PAGE_ROWS
         @cur_y -= PAGE_ROWS
         clamp_cursor
+      when :home
+        if @cur_x == 0
+          @addr = 0
+          @cur_y = 0
+        else
+          @addr -= @cur_x
+          @cur_x = 0
+        end
+        clamp_cursor
+      when :end
+        if @cur_x == PER_LINE - 1
+          @addr = @buf.size - 1
+          reset_cur
+        else
+          @addr = @addr - @cur_x + PER_LINE - 1
+          @cur_x = PER_LINE - 1
+        end
+        clamp_cursor
       when 'q'
         @tree.do_exit if @tree
         return
@@ -116,7 +134,7 @@ class HexViewer
   PER_LINE = 16
   PER_GROUP = 4
   PAGE_ROWS = 20
-  FMT = "%06x: %-#{PER_LINE * 3}s| %s\n"
+  FMT = "%06x: %-#{PER_LINE * 3}s| %-#{PER_LINE}s\n"
 
   def self.line_width
     #6 + 2 + 3 * PER_LINE + 2 + PER_LINE
