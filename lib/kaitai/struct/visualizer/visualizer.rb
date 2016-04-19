@@ -29,7 +29,7 @@ class Visualizer
       @data._read
     rescue EOFError => e
       load_exc = e
-    rescue KaitaiStream::UnexpectedDataError => e
+    rescue Kaitai::Struct::Stream::UnexpectedDataError => e
       load_exc = e
     end
 

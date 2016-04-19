@@ -7,7 +7,7 @@ full_bin_path = File.realpath($PROGRAM_NAME)
 dist_path = File.expand_path(File.dirname(full_bin_path) + '/..')
 
 $LOAD_PATH << "#{dist_path}/lib"
-$LOAD_PATH << "#{dist_path}/../kaitai_struct/runtime/ruby"
+$LOAD_PATH << "#{dist_path}/../runtime/ruby/lib"
 
 require 'kaitai/struct/visualizer'
 

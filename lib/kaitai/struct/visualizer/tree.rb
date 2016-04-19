@@ -65,7 +65,7 @@ class Tree
         process_keypress
       rescue EOFError => e
         @ui.message_box_exception(e)
-      rescue KaitaiStream::UnexpectedDataError => e
+      rescue Kaitai::Struct::Stream::UnexpectedDataError => e
         @ui.message_box_exception(e)
       end
 
