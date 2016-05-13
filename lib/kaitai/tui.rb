@@ -1,5 +1,6 @@
 # coding: utf-8
 require 'io/console'
+require 'readline'
 
 module Kaitai
 
@@ -139,6 +140,16 @@ class TUI
       c = read_char_mapped
       return if c == :enter
     }
+  end
+
+  def input_str(header, msg)
+    top_y = @rows / 2 - 5
+    draw_rectangle(10, top_y, @cols - 20, 10)
+    goto(@cols / 2 - (header.length / 2) - 1, top_y)
+    print ' ', header, ' '
+
+    goto(11, top_y + 1)
+    Readline.readline('', false)
   end
 
   def draw_rectangle(x, y, w, h, charset = DOUBLE_CHARSET)

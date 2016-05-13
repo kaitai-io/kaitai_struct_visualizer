@@ -114,6 +114,13 @@ class HexViewer
           @cur_x = PER_LINE - 1
         end
         clamp_cursor
+      when 'w'
+        fn = @ui.input_str('Write buffer to file', 'Filename')
+        File.open(fn, 'w') { |out|
+          out.write(@buf)
+        }
+        @ui.clear
+        redraw
       when 'q'
         @tree.do_exit if @tree
         return
