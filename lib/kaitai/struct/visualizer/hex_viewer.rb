@@ -55,7 +55,7 @@ class HexViewer
     c = nil
     loop {
       @ui.goto(0, @max_scr_ln + 1)
-      printf "%06x (%d, %d)", @addr, @cur_x, @cur_y
+      printf "%08x (%d, %d)", @addr, @cur_x, @cur_y
 
       @ui.goto(col_to_col_char(@cur_x), row_to_scr(@cur_y))
       c = @ui.read_char_mapped
@@ -144,21 +144,21 @@ class HexViewer
   PER_LINE = 16
   PER_GROUP = 4
   PAGE_ROWS = 20
-  FMT = "%06x: %-#{PER_LINE * 3}s| %-#{PER_LINE}s\n"
+  FMT = "%08x: %-#{PER_LINE * 3}s| %-#{PER_LINE}s\n"
 
   def self.line_width
-    #6 + 2 + 3 * PER_LINE + 2 + PER_LINE
-    10 + 4 * PER_LINE
+    #8 + 2 + 3 * PER_LINE + 2 + PER_LINE
+    12 + 4 * PER_LINE
   end
 
   def col_to_col_hex(c)
-    #6 + 2 + 3 * c
-    @shift_x + 8 + 3 * c
+    #8 + 2 + 3 * c
+    @shift_x + 10 + 3 * c
   end
 
   def col_to_col_char(c)
-    #6 + 2 + 3 * PER_LINE + 2
-    @shift_x + 10 + 3 * PER_LINE + c
+    #8 + 2 + 3 * PER_LINE + 2
+    @shift_x + 12 + 3 * PER_LINE + c
   end
 
   def row_to_scr(r)
