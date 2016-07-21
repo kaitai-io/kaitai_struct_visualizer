@@ -95,9 +95,11 @@ class Node
       max_len = @tree.tree_width - pos
       case @str_mode
       when :str
-        s = @value[0, max_len]
+        v = @value.encode('UTF-8')
+        s = v[0, max_len]
       when :str_esc
-        s = @value.inspect[0, max_len]
+        v = @value.encode('UTF-8')
+        s = v.inspect[0, max_len]
       when :hex
         s = first_n_bytes_dump(@value, max_len / 3 + 1)
       else
