@@ -41,6 +41,7 @@ class Node
     not (
       @value.is_a?(Fixnum) or
       @value.is_a?(Bignum) or
+      @value.is_a?(Float) or
       @value.is_a?(String) or
       @value.is_a?(Symbol) or
       @value === true or
@@ -85,7 +86,7 @@ class Node
 
     pos = 2 * level + 4 + @id.length
 
-    if @value.is_a?(Fixnum) or @value.is_a?(Bignum)
+    if @value.is_a?(Fixnum) or @value.is_a?(Bignum) or @value.is_a?(Float)
       print " = #{@value}"
     elsif @value.is_a?(Symbol)
       print " = #{@value}"
@@ -162,7 +163,11 @@ class Node
       @value = @parent.value.send(@value_method)
     end
 
-    if @value.is_a?(Fixnum) or @value.is_a?(Bignum) or @value.is_a?(String) or @value.is_a?(Symbol)
+    if @value.is_a?(Fixnum) or
+       @value.is_a?(Bignum) or
+       @value.is_a?(Float) or
+       @value.is_a?(String) or
+       @value.is_a?(Symbol)
       # do nothing else
     elsif @value.is_a?(Array)
       clean_id = @id[0] == '@' ? @id[1..-1] : @id
