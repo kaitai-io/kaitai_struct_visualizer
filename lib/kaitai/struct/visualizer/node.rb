@@ -168,7 +168,13 @@ class Node
        @value.is_a?(Float) or
        @value.is_a?(String) or
        @value.is_a?(Symbol)
-      # do nothing else
+      clean_id = @id[0] == '@' ? @id[1..-1] : @id
+      debug_el = @parent.value._debug[clean_id]
+      #raise "Unable to get debugging aid for: #{@parent.value._debug.inspect} using ID '#{clean_id}'" unless debug_el
+      if debug_el
+        @pos1 = debug_el[:start]
+        @pos2 = debug_el[:end]
+      end
     elsif @value.is_a?(Array)
       clean_id = @id[0] == '@' ? @id[1..-1] : @id
       debug_el = @parent.value._debug[clean_id]
