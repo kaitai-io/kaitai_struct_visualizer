@@ -18,9 +18,17 @@ for details on `.ksy` files and general usage patterns.
 
 ## Downloading and installing
 
-### Generic
+### From Ruby Gems repository
 
-KS visualizer is written in Ruby and is available as .gem package. 
+KS visualizer is written in [Ruby](https://www.ruby-lang.org/) and is
+available as
+[.gem package](https://rubygems.org/gems/kaitai-struct-visualizer). Thus,
+you'll need Ruby ([RubyGems] package manager comes bundled with Ruby
+since v1.9) installed on your box, and then you can just run:
+
+```shell
+gem install kaitai-struct-visualizer
+```
 
 ### Source code
 
