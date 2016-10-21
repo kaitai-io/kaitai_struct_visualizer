@@ -1,5 +1,6 @@
 require 'kaitai/struct/visualizer/version'
 require 'kaitai/struct/visualizer/visualizer'
+require 'kaitai/tui'
 
 module Kaitai::Struct::Visualizer
 
@@ -14,7 +15,7 @@ class ExternalCompilerVisualizer < Visualizer
       # '-d' (which allows to pass defines to JVM). Windows-based systems
       # do not need and do not support this extra '--', so we don't add it
       # on Windows.
-      args.unshift('--') unless is_windows?
+      args.unshift('--') unless Kaitai::TUI::is_windows?
 
       system('kaitai-struct-compiler', *args)
       if $?.exitstatus != 0
@@ -35,13 +36,6 @@ class ExternalCompilerVisualizer < Visualizer
     }
 
     return main_class_name
-  end
-
-  # Detects if current platform is Windows-based.
-  # Regexp borrowed from
-  # http://stackoverflow.com/questions/170956/how-can-i-find-which-operating-system-my-ruby-program-is-running-on
-  def is_windows?
-    (RUBY_PLATFORM =~ /cygwin|mswin|mingw|bccwin|wince|emx/) ? true : false
   end
 end
 

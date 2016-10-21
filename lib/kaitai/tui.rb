@@ -9,11 +9,21 @@ class TUI
   attr_reader :rows
 
   def initialize
-    @cols = `tput cols`.to_i
-    @rows = `tput lines`.to_i
+    unless TUI::is_windows?
+      # Normal POSIX way to determine console parameters
+      @cols = `tput cols`.to_i
+      @rows = `tput lines`.to_i
 
-    @seq_clear = `tput clear`
-    @seq_sgr0 = `tput sgr0`
+      @seq_clear = `tput clear`
+      @seq_sgr0 = `tput sgr0`
+    else
+      # Windows uses ANSICON, so just use hard-coded ANSI sequences
+      @cols = 80
+      @rows = 25
+
+      @seq_clear = "\e[H\e[2J"
+      @seq_sgr0 = "\e(B\e[m"
+    end
     @seq_fgcolor = []
     @seq_bgcolor = []
   end
@@ -174,6 +184,15 @@ class TUI
   def draw_button(x, y, w, caption)
     goto(x, y)
     puts "[ #{caption} ]"
+  end
+
+  # Regexp borrowed from
+  # http://stackoverflow.com/questions/170956/how-can-i-find-which-operating-system-my-ruby-program-is-running-on
+  @@is_windows = (RUBY_PLATFORM =~ /cygwin|mswin|mingw|bccwin|wince|emx/) ? true : false
+
+  # Detects if current platform is Windows-based.
+  def self.is_windows?
+    @@is_windows
   end
 end
 
