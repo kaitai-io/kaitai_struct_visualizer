@@ -186,7 +186,8 @@ class Node
       fmt = "%#{max_val_digits}d"
 
       @value.each_with_index { |el, i|
-        n = Node.new(@tree, el, level + 1, nil, aid[i][:start], aid[i][:end])
+        aid_el = aid[i] || {}
+        n = Node.new(@tree, el, level + 1, nil, aid_el[:start], aid_el[:end])
         n.id = sprintf(fmt, i)
         add(n)
       }
