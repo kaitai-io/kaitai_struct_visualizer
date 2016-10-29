@@ -12,6 +12,7 @@ class Node
   attr_reader :pos2
   attr_reader :children
   attr_accessor :parent
+  attr_accessor :type
 
   def initialize(tree, value, level, value_method = nil, pos1 = nil, pos2 = nil)
     @tree = tree
@@ -60,7 +61,7 @@ class Node
       open
     end
   end
-  
+
   def open
     return unless openable?
     explore
@@ -86,36 +87,40 @@ class Node
 
     pos = 2 * level + 4 + @id.length
 
-    if @value.is_a?(Fixnum) or @value.is_a?(Bignum) or @value.is_a?(Float)
-      print " = #{@value}"
-    elsif @value.is_a?(Symbol)
-      print " = #{@value}"
-    elsif @value.is_a?(String)
-      print ' = '
-      pos += 3
-      @str_mode = detect_str_mode unless @str_mode
-      max_len = @tree.tree_width - pos
-      case @str_mode
-      when :str
-        v = @value.encode('UTF-8')
-        s = v[0, max_len]
-      when :str_esc
-        v = @value.encode('UTF-8')
-        s = v.inspect[0, max_len]
-      when :hex
-        s = first_n_bytes_dump(@value, max_len / 3 + 1)
-      else
-        raise "Invalid str_mode: #{@str_mode.inspect}"
+    if open? or not openable?
+      if @value.is_a?(Fixnum) or @value.is_a?(Bignum) or @value.is_a?(Float)
+        print " = #{@value}"
+      elsif @value.is_a?(Symbol)
+        print " = #{@value}"
+      elsif @value.is_a?(String)
+        print ' = '
+        pos += 3
+        @str_mode = detect_str_mode unless @str_mode
+        max_len = @tree.tree_width - pos
+        case @str_mode
+        when :str
+          v = @value.encode('UTF-8')
+          s = v[0, max_len]
+        when :str_esc
+          v = @value.encode('UTF-8')
+          s = v.inspect[0, max_len]
+        when :hex
+          s = first_n_bytes_dump(@value, max_len / 3 + 1)
+        else
+          raise "Invalid str_mode: #{@str_mode.inspect}"
+        end
+        if s.length > max_len
+          s = s[0, max_len - 1]
+          s += '…'
+        end
+        print s
+      elsif @value === true or @value === false
+        print " = #{@value}"
+      elsif @value.nil?
+        print " = null"
+      elsif @value.is_a?(Array)
+        printf ' (%d = 0x%x entries)', @value.size, @value.size
       end
-      if s.length > max_len
-        s = s[0, max_len - 1]
-        s += '…'
-      end
-      print s
-    elsif @value === true or @value === false
-      print " = #{@value}"
-    elsif @value.is_a?(Array)
-      printf ' (%d = 0x%x entries)', @value.size, @value.size
     end
 
     puts
@@ -163,10 +168,15 @@ class Node
       @value = @parent.value.send(@value_method)
     end
 
+    @explored = true
+
     if @value.is_a?(Fixnum) or
        @value.is_a?(Bignum) or
        @value.is_a?(Float) or
        @value.is_a?(String) or
+       @value == true or
+       @value == false or
+       @value.nil? or
        @value.is_a?(Symbol)
       clean_id = @id[0] == '@' ? @id[1..-1] : @id
       debug_el = @parent.value._debug[clean_id]
@@ -193,12 +203,9 @@ class Node
       }
     else
       # Gather seq attributes
-      attrs = Set.new
-      @value.instance_variables.each { |k|
-        k = k.to_s
-        next if k =~ /^@_/
-        el = @value.instance_eval(k)
-        aid = @value._debug[k[1..-1]]
+      @value.class::SEQ_FIELDS.each { |k|
+        el = @value.instance_eval("@#{k}")
+        aid = @value._debug[k]
         if aid
           aid_s = aid[:start]
           aid_e = aid[:end]
@@ -207,11 +214,15 @@ class Node
           aid_s = nil
           aid_e = nil
         end
-        n = Node.new(@tree, el, level + 1, nil, aid_s, aid_e)
-        n.id = k
-        add(n)
-        attrs << k.gsub(/^@/, '')
+        unless el.nil?
+          n = Node.new(@tree, el, level + 1, nil, aid_s, aid_e)
+          n.id = k
+          n.type = :seq
+          add(n)
+        end
       }
+
+      attrs = Set.new(@value.class::SEQ_FIELDS)
 
       # Gather instances
       common_meths = Set.new
@@ -225,10 +236,10 @@ class Node
         next if k =~ /^_/ or attrs.include?(k)
         n = Node.new(@tree, nil, level + 1, meth)
         n.id = k
+        n.type = :instance
         add(n)
       }
     end
-    @explored = true
   end
 
   ##
