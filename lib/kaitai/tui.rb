@@ -7,14 +7,30 @@ class TUI
   extend Forwardable
   def_delegators :@console, :rows, :cols, :goto, :clear, :fg_color=, :bg_color=, :reset_colors, :read_char_mapped
 
+  attr_reader :highlight_colors
+
   def initialize
-    @console = if TUI::is_windows?
-                 require 'kaitai/console_windows'
-                 ConsoleWindows.new
-               else
-                 require 'kaitai/console_ansi'
-                 ConsoleANSI.new
-               end
+    if TUI::is_windows?
+      require 'kaitai/console_windows'
+      @console = ConsoleWindows.new
+      @highlight_colors = [
+        :white,
+        :aqua,
+        :blue,
+        :green,
+        :white,
+      ]
+    else
+      require 'kaitai/console_ansi'
+      @console = ConsoleANSI.new
+      @highlight_colors = [
+        :gray14,
+        :gray11,
+        :gray8,
+        :gray5,
+        :gray2,
+      ]
+    end
   end
 
   def message_box_exception(e)
