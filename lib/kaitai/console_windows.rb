@@ -74,6 +74,7 @@ class ConsoleWindows
       0, # [0, 0] coords
       num_written
     )
+    goto(0, 0)
   end
 
   ##
