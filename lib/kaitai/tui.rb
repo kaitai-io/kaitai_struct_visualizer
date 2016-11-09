@@ -49,13 +49,13 @@ class TUI
   CHAR_V  = 5
 
   def message_box(header, msg)
-    top_y = @rows / 2 - 5
-    draw_rectangle(10, top_y, @cols - 20, 10)
-    @console.goto(@cols / 2 - (header.length / 2) - 1, top_y)
+    top_y = @console.rows / 2 - 5
+    draw_rectangle(10, top_y, @console.cols - 20, 10)
+    @console.goto(@console.cols / 2 - (header.length / 2) - 1, top_y)
     print ' ', header, ' '
     @console.goto(11, top_y + 1)
     puts msg
-    draw_button(@cols / 2 - 10, top_y + 8, 10, 'OK')
+    draw_button(@console.cols / 2 - 10, top_y + 8, 10, 'OK')
     loop {
       c = @console.read_char_mapped
       return if c == :enter
@@ -63,9 +63,9 @@ class TUI
   end
 
   def input_str(header, msg)
-    top_y = @rows / 2 - 5
-    draw_rectangle(10, top_y, @cols - 20, 10)
-    goto(@cols / 2 - (header.length / 2) - 1, top_y)
+    top_y = @console.rows / 2 - 5
+    draw_rectangle(10, top_y, @console.cols - 20, 10)
+    goto(@console.cols / 2 - (header.length / 2) - 1, top_y)
     print ' ', header, ' '
 
     goto(11, top_y + 1)
