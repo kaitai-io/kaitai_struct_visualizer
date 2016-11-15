@@ -12,7 +12,7 @@ $LOAD_PATH << "#{dist_path}/../runtime/ruby/lib"
 require 'kaitai/struct/visualizer'
 
 if ARGV.size < 2
-  puts "Usage: #{File.basename($PROGRAM_NAME)} <file_to_parse.bin> <format.yaml>..."
+  puts "Usage: #{File.basename($PROGRAM_NAME)} <file_to_parse.bin> <format.ksy>..."
   exit 1
 end
 
