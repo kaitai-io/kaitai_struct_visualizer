@@ -33,6 +33,10 @@ class TUI
     end
   end
 
+  def on_resize=(handler)
+    @console.on_resize = handler
+  end
+
   def message_box_exception(e)
     message_box("Error while parsing", e.message)
   end

@@ -2,7 +2,9 @@ require 'kaitai/struct/visualizer/version'
 
 module Kaitai::Struct::Visualizer
 class HexViewer
-  def initialize(ui, buf, shift_x = 0, tree = nil)
+  attr_accessor :shift_x
+
+  def initialize(ui, buf, tree = nil)
     @ui = ui
     @buf = buf
     @shift_x = shift_x

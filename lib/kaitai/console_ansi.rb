@@ -9,15 +9,28 @@ class ConsoleANSI
   attr_reader :rows
 
   def initialize
-    # Normal POSIX way to determine console parameters
-    @cols = `tput cols`.to_i
-    @rows = `tput lines`.to_i
+    get_term_size
 
     @seq_clear = `tput clear`
     @seq_sgr0 = `tput sgr0`
 
     @seq_fgcolor = []
     @seq_bgcolor = []
+
+    @on_resize = nil
+
+    Signal.trap('SIGWINCH', proc {
+      get_term_size
+      @on_resize.call if @on_resize
+    })
+  end
+
+  def on_resize=(handler)
+    @on_resize = handler
+  end
+
+  def get_term_size
+    @rows, @cols = IO.console.winsize
   end
 
   def clear

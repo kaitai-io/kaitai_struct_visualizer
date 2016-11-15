@@ -50,6 +50,10 @@ class ConsoleWindows
     @rows = win_bottom - win_top + 1
   end
 
+  def on_resize=(handler)
+    @on_resize = handler
+  end
+
   def puts(s)
     Kernel::puts s
 #    num_written = 'XXXX'

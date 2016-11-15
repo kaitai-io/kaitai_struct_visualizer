@@ -11,17 +11,27 @@ class Tree
     @st = st
     @root = Node.new(self, st, 0)
     @root.id = '[root]'
-    @max_scr_ln = @ui.rows - 3
-
-    @hv_shift_x = @ui.cols - HexViewer.line_width - 1
 
     @cur_io = nil
-    @hv = HexViewer.new(ui, nil, @hv_shift_x, self)
+    @hv = HexViewer.new(ui, nil, self)
     @hv_hidden = false
+
+    recalc_sizes
 
     @cur_line = 0
     @cur_shift = 0
     @do_exit = false
+
+    @ui.on_resize = proc {
+      recalc_sizes
+      redraw
+      @hv.redraw
+    }
+  end
+
+  def recalc_sizes
+    @max_scr_ln = @ui.rows - 3
+    @hv.shift_x = @ui.cols - HexViewer.line_width - 1
   end
 
   def run
@@ -221,7 +231,7 @@ class Tree
     if @hv_hidden
       @ui.cols
     else
-      @hv_shift_x
+      @hv.shift_x
     end
   end
 
