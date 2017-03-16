@@ -2,13 +2,18 @@ require 'kaitai/struct/visualizer/version'
 require 'kaitai/struct/visualizer/visualizer'
 require 'kaitai/tui'
 
+require 'open3'
+require 'json'
+
 module Kaitai::Struct::Visualizer
 
 class ExternalCompilerVisualizer < Visualizer
-  def compile_format(fn)
+  def compile_formats(fns)
     main_class_name = nil
     Dir.mktmpdir { |code_dir|
-      args = ['--debug', '-t', 'ruby', fn, '-d', code_dir]
+      args = ['--ksc-json-output', '--debug', '-t', 'ruby', *fns, '-d', code_dir]
+
+      p args
 
       # UNIX-based systems run ksc via a shell wrapper that requires
       # extra '--' in invocation to disambiguate our '-d' from java runner
@@ -17,22 +22,43 @@ class ExternalCompilerVisualizer < Visualizer
       # on Windows.
       args.unshift('--') unless Kaitai::TUI::is_windows?
 
-      system('kaitai-struct-compiler', *args)
-      if $?.exitstatus != 0
-        st = $?.exitstatus
-        $stderr.puts("ksv: unable to find and execute kaitai-struct-compiler in your PATH") if st == 127
+      status = nil
+      log_str = nil
+      Open3.popen3('kaitai-struct-compiler', *args) { |stdin, stdout, stderr, wait_thr|
+        status = wait_thr.value
+        log_str = stdout.read
+      }
+
+      if status != 0
+        $stderr.puts("ksv: unable to find and execute kaitai-struct-compiler in your PATH") if status == 127
         exit st
       end
 
+      log = JSON.load(log_str)
+
+      # FIXME: add log results check
       puts "Compilation OK"
 
-      compiled_path = Dir.glob("#{code_dir}/*.rb")[0]
+      fns.each_with_index { |fn, idx|
+        puts "... processing #{fn}"
+        log_classes = log[fn]['output']['ruby']
+        log_classes.each_pair { |k, v|
+          compiled_name = v['files'][0]['fileName']
+          compiled_path = "#{code_dir}/#{compiled_name}"
 
-      require compiled_path
+          puts "...... loading #{compiled_name}"
+          require compiled_path
 
-      puts "Class loaded OK"
+          # Is it main class?
+          if idx == 0
+            # FIXME: use after topLevelName works
+            #main_class_name = v['topLevelName']
+            main_class_name = k.split(/_/).map { |x| x.capitalize }.join
+          end
+        }
+      }
 
-      main_class_name = File.readlines(compiled_path).grep(/^class /)[0].strip.gsub(/^class /, '').gsub(/ <.*$/, '')
+      puts "Classes loaded OK"
     }
 
     return main_class_name
