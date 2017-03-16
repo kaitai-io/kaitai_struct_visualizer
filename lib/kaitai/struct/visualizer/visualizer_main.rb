@@ -9,11 +9,10 @@ module Kaitai::Struct::Visualizer
 
 class ExternalCompilerVisualizer < Visualizer
   def compile_formats(fns)
+    errs = false
     main_class_name = nil
     Dir.mktmpdir { |code_dir|
       args = ['--ksc-json-output', '--debug', '-t', 'ruby', *fns, '-d', code_dir]
-
-      p args
 
       # UNIX-based systems run ksc via a shell wrapper that requires
       # extra '--' in invocation to disambiguate our '-d' from java runner
@@ -40,28 +39,44 @@ class ExternalCompilerVisualizer < Visualizer
       puts "Compilation OK"
 
       fns.each_with_index { |fn, idx|
-        puts "... processing #{fn}"
-        log_classes = log[fn]['output']['ruby']
-        log_classes.each_pair { |k, v|
-          compiled_name = v['files'][0]['fileName']
-          compiled_path = "#{code_dir}/#{compiled_name}"
+        puts "... processing #{fn} #{idx}"
 
-          puts "...... loading #{compiled_name}"
-          require compiled_path
+        log_fn = log[fn]
+        if log_fn['errors']
+          report_err(log_fn['errors'])
+          errs = true
+        else
+          log_classes = log_fn['output']['ruby']
+          log_classes.each_pair { |k, v|
+            compiled_name = v['files'][0]['fileName']
+            compiled_path = "#{code_dir}/#{compiled_name}"
 
-          # Is it main class?
+            puts "...... loading #{compiled_name}"
+            require compiled_path
+          }
+
+          # Is it main ClassSpecs?
           if idx == 0
-            # FIXME: use after topLevelName works
-            #main_class_name = v['topLevelName']
-            main_class_name = k.split(/_/).map { |x| x.capitalize }.join
+            main = log_classes[log_fn['firstSpecName']]
+            main_class_name = main['topLevelName']
           end
-        }
+        end
       }
 
-      puts "Classes loaded OK"
     }
 
+    if errs
+      puts "Fatal errors encountered, cannot continue"
+      exit 1
+    else
+      puts "Classes loaded OK, main class = #{main_class_name}"
+    end
+
     return main_class_name
+  end
+
+  def report_err(err)
+    puts "Error: #{err.inspect}"
   end
 end
 
