@@ -7,7 +7,7 @@ class HexViewer
   def initialize(ui, buf, tree = nil)
     @ui = ui
     @buf = buf
-    @shift_x = shift_x
+    @shift_x = 0
     @tree = tree
 
     @embedded = not(tree.nil?)
