@@ -26,11 +26,22 @@ class ExternalCompilerVisualizer < Visualizer
       Open3.popen3('kaitai-struct-compiler', *args) { |stdin, stdout, stderr, wait_thr|
         status = wait_thr.value
         log_str = stdout.read
+        err_str = stderr.read
       }
 
       if status != 0
-        $stderr.puts("ksv: unable to find and execute kaitai-struct-compiler in your PATH") if status == 127
-        exit st
+        if status == 127
+          $stderr.puts "ksv: unable to find and execute kaitai-struct-compiler in your PATH"
+        else
+          $stderr.puts "ksc crashed (exit status = #{status}):\n"
+          $stderr.puts "== STDOUT\n"
+          $stderr.puts log_str
+          $stderr.puts
+          $stderr.puts "== STDERR\n"
+          $stderr.puts err_str
+          $stderr.puts
+        end
+        exit status
       end
 
       log = JSON.load(log_str)
