@@ -43,8 +43,7 @@ out source code in repository:
 
 ## Licensing
 
-Kaitai Struct visualizer itself is copyright (C) 2015-2016 Kaitai
-Project.
+Kaitai Struct visualizer is copyright (C) 2015-2017 Kaitai Project.
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
