@@ -23,15 +23,20 @@ class ExternalCompilerVisualizer < Visualizer
 
       status = nil
       log_str = nil
+      err_str = nil
       Open3.popen3('kaitai-struct-compiler', *args) { |stdin, stdout, stderr, wait_thr|
         status = wait_thr.value
         log_str = stdout.read
         err_str = stderr.read
       }
 
-      if status != 0
-        if status == 127
+      if not status.success?
+        if status.exitstatus == 127
           $stderr.puts "ksv: unable to find and execute kaitai-struct-compiler in your PATH"
+        elsif err_str =~ /Error: Unknown option --ksc-json-output/
+          $stderr.puts "ksv: your kaitai-struct-compiler is too old:"
+          system('kaitai-struct-compiler', '--version')
+          $stderr.puts "\nPlease use at least v0.7."
         else
           $stderr.puts "ksc crashed (exit status = #{status}):\n"
           $stderr.puts "== STDOUT\n"
@@ -41,7 +46,7 @@ class ExternalCompilerVisualizer < Visualizer
           $stderr.puts err_str
           $stderr.puts
         end
-        exit status
+        exit status.exitstatus
       end
 
       log = JSON.load(log_str)
