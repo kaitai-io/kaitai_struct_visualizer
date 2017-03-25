@@ -186,6 +186,10 @@ class Node
         @pos2 = debug_el[:end]
       end
     elsif @value.is_a?(Array)
+      # Bail out early for empty array: it doesn't have proper
+      # debugging aids structure anyway
+      return if @value.empty?
+
       clean_id = @id[0] == '@' ? @id[1..-1] : @id
       debug_el = @parent.value._debug[clean_id]
       raise "Unable to get debugging aid for array: #{@parent.value._debug.inspect} using ID '#{clean_id}'" unless debug_el
