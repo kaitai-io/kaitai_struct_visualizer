@@ -1,5 +1,7 @@
 #!/usr/bin/env ruby
 
+require 'optparse'
+
 # Some additional magic to make it work right after repo checkout,
 # without installation to proper Ruby library dirs
 
@@ -11,10 +13,40 @@ $LOAD_PATH << "#{dist_path}/../runtime/ruby/lib"
 
 require 'kaitai/struct/visualizer'
 
-if ARGV.size < 2
-  puts "Usage: #{File.basename($PROGRAM_NAME)} <file_to_parse.bin> <format.ksy>..."
+# ======================================================================
+
+options = {}
+parser = OptionParser.new do |opts|
+  opts.banner = "Usage: #{File.basename($PROGRAM_NAME)} [options] <file_to_parse.bin> <format.ksy>..."
+  opts.separator ""
+
+  opts.on("-I", "--import-path [DIRECTORIES]", ".ksy library search path(s) for imports (see also KSPATH env variable)") do |v|
+    options[:import_path] = v
+  end
+
+  opts.on("--opaque-types [BOOLEAN]", "opaque types allowed, default: false") do |v|
+    options[:opaque_types] = v
+  end
+
+  opts.on("--version", "show versions of ksv and ksc") do |v|
+    puts "kaitai-struct-visualizer #{Kaitai::Struct::Visualizer::VERSION}"
+    system("ksc", "--version")
+    exit 0
+  end
+end
+
+begin
+  parser.parse!
+rescue OptionParser::InvalidOption => e
+  puts e
+  puts parser
   exit 1
 end
 
-v = Kaitai::Struct::Visualizer::ExternalCompilerVisualizer.new(ARGV[0], ARGV[1..-1])
+if ARGV.size < 2
+  puts parser
+  exit 1
+end
+
+v = Kaitai::Struct::Visualizer::ExternalCompilerVisualizer.new(ARGV[0], ARGV[1..-1], options)
 v.run

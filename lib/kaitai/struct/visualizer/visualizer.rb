@@ -10,9 +10,10 @@ require 'stringio'
 
 module Kaitai::Struct::Visualizer
 class Visualizer
-  def initialize(bin_fn, formats_fn)
+  def initialize(bin_fn, formats_fn, opts)
     @bin_fn = bin_fn
     @formats_fn = formats_fn
+    @opts = opts
 
     main_class_name = compile_formats(formats_fn)
 

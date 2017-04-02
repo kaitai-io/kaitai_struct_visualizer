@@ -14,6 +14,13 @@ class ExternalCompilerVisualizer < Visualizer
     Dir.mktmpdir { |code_dir|
       args = ['--ksc-json-output', '--debug', '-t', 'ruby', *fns, '-d', code_dir]
 
+      # Extra arguments
+      extra = []
+      extra += ['--import-path', @opts[:import_path]] if @opts[:import_path]
+      extra += ['--opaque-types', @opts[:opaque_types]] if @opts[:opaque_types]
+
+      args = extra + args
+
       # UNIX-based systems run ksc via a shell wrapper that requires
       # extra '--' in invocation to disambiguate our '-d' from java runner
       # '-d' (which allows to pass defines to JVM). Windows-based systems
