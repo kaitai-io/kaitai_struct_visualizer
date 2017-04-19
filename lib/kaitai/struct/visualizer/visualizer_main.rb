@@ -71,11 +71,16 @@ class ExternalCompilerVisualizer < Visualizer
         else
           log_classes = log_fn['output']['ruby']
           log_classes.each_pair { |k, v|
-            compiled_name = v['files'][0]['fileName']
-            compiled_path = "#{code_dir}/#{compiled_name}"
+            if v['errors']
+              report_err(v['errors'])
+              errs = true
+            else
+              compiled_name = v['files'][0]['fileName']
+              compiled_path = "#{code_dir}/#{compiled_name}"
 
-            puts "...... loading #{compiled_name}"
-            require compiled_path
+              puts "...... loading #{compiled_name}"
+              require compiled_path
+            end
           }
 
           # Is it main ClassSpecs?
