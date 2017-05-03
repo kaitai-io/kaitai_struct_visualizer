@@ -1,5 +1,6 @@
 require 'kaitai/struct/visualizer/version'
 require 'kaitai/tui'
+require 'kaitai/struct/visualizer/parser'
 require 'kaitai/struct/visualizer/tree'
 
 # TODO: should be inside compiled files
@@ -7,35 +8,16 @@ require 'zlib'
 require 'stringio'
 
 module Kaitai::Struct::Visualizer
-class Visualizer
-  def initialize(compiler, bin_fn, formats_fn, opts)
-    @compiler = compiler
-    @bin_fn = bin_fn
-    @formats_fn = formats_fn
-    @opts = opts
-
-    main_class_name = @compiler.compile_formats(formats_fn)
-
-    main_class = Kernel::const_get(main_class_name)
-    @data = main_class.from_file(@bin_fn)
-
-    load_exc = nil
-    begin
-      @data._read
-    rescue EOFError => e
-      load_exc = e
-    rescue Kaitai::Struct::Stream::UnexpectedDataError => e
-      load_exc = e
-    end
+class Visualizer < Parser
+  def run
+    load_exc = load
 
     @ui = Kaitai::TUI.new
     @tree = Tree.new(@ui, @data)
 
     @tree.redraw
     @ui.message_box_exception(load_exc) if load_exc
-  end
 
-  def run
     @tree.run
   end
 end
