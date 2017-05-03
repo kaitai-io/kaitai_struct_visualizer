@@ -1,13 +1,17 @@
 require 'kaitai/struct/visualizer/version'
-require 'kaitai/struct/visualizer/visualizer'
 require 'kaitai/tui'
 
 require 'open3'
 require 'json'
+require 'tmpdir'
 
 module Kaitai::Struct::Visualizer
 
-class ExternalCompilerVisualizer < Visualizer
+class KSYCompiler
+  def initialize(opts)
+    @opts = opts
+  end
+
   def compile_formats(fns)
     errs = false
     main_class_name = nil

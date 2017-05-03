@@ -48,5 +48,6 @@ if ARGV.size < 2
   exit 1
 end
 
-v = Kaitai::Struct::Visualizer::ExternalCompilerVisualizer.new(ARGV[0], ARGV[1..-1], options)
+c = Kaitai::Struct::Visualizer::KSYCompiler.new(options)
+v = Kaitai::Struct::Visualizer::Visualizer.new(c, ARGV[0], ARGV[1..-1], options)
 v.run

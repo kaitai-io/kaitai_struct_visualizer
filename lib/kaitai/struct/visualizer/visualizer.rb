@@ -1,5 +1,3 @@
-require 'tmpdir'
-
 require 'kaitai/struct/visualizer/version'
 require 'kaitai/tui'
 require 'kaitai/struct/visualizer/tree'
@@ -10,12 +8,13 @@ require 'stringio'
 
 module Kaitai::Struct::Visualizer
 class Visualizer
-  def initialize(bin_fn, formats_fn, opts)
+  def initialize(compiler, bin_fn, formats_fn, opts)
+    @compiler = compiler
     @bin_fn = bin_fn
     @formats_fn = formats_fn
     @opts = opts
 
-    main_class_name = compile_formats(formats_fn)
+    main_class_name = @compiler.compile_formats(formats_fn)
 
     main_class = Kernel::const_get(main_class_name)
     @data = main_class.from_file(@bin_fn)
