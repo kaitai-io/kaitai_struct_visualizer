@@ -8,8 +8,9 @@ require 'tmpdir'
 module Kaitai::Struct::Visualizer
 
 class KSYCompiler
-  def initialize(opts)
+  def initialize(opts, out = $stderr)
     @opts = opts
+    @out = out
   end
 
   def compile_formats(fns)
@@ -43,19 +44,19 @@ class KSYCompiler
 
       if not status.success?
         if status.exitstatus == 127
-          $stderr.puts "ksv: unable to find and execute kaitai-struct-compiler in your PATH"
+          @out.puts "ksv: unable to find and execute kaitai-struct-compiler in your PATH"
         elsif err_str =~ /Error: Unknown option --ksc-json-output/
-          $stderr.puts "ksv: your kaitai-struct-compiler is too old:"
+          @out.puts "ksv: your kaitai-struct-compiler is too old:"
           system('kaitai-struct-compiler', '--version')
-          $stderr.puts "\nPlease use at least v0.7."
+          @out.puts "\nPlease use at least v0.7."
         else
-          $stderr.puts "ksc crashed (exit status = #{status}):\n"
-          $stderr.puts "== STDOUT\n"
-          $stderr.puts log_str
-          $stderr.puts
-          $stderr.puts "== STDERR\n"
-          $stderr.puts err_str
-          $stderr.puts
+          @out.puts "ksc crashed (exit status = #{status}):\n"
+          @out.puts "== STDOUT\n"
+          @out.puts log_str
+          @out.puts
+          @out.puts "== STDERR\n"
+          @out.puts err_str
+          @out.puts
         end
         exit status.exitstatus
       end
@@ -63,10 +64,10 @@ class KSYCompiler
       log = JSON.load(log_str)
 
       # FIXME: add log results check
-      puts "Compilation OK"
+      @out.puts "Compilation OK"
 
       fns.each_with_index { |fn, idx|
-        puts "... processing #{fn} #{idx}"
+        @out.puts "... processing #{fn} #{idx}"
 
         log_fn = log[fn]
         if log_fn['errors']
@@ -82,7 +83,7 @@ class KSYCompiler
               compiled_name = v['files'][0]['fileName']
               compiled_path = "#{code_dir}/#{compiled_name}"
 
-              puts "...... loading #{compiled_name}"
+              @out.puts "...... loading #{compiled_name}"
               require compiled_path
             end
           }
@@ -98,17 +99,17 @@ class KSYCompiler
     }
 
     if errs
-      puts "Fatal errors encountered, cannot continue"
+      @out.puts "Fatal errors encountered, cannot continue"
       exit 1
     else
-      puts "Classes loaded OK, main class = #{main_class_name}"
+      @out.puts "Classes loaded OK, main class = #{main_class_name}"
     end
 
     return main_class_name
   end
 
   def report_err(err)
-    puts "Error: #{err.inspect}"
+    @out.puts "Error: #{err.inspect}"
   end
 end
 
