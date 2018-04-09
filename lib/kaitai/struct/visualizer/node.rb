@@ -110,7 +110,7 @@ class Node
           raise "Invalid str_mode: #{@str_mode.inspect}"
         end
         if s.length > max_len
-          s = s[0, max_len - 1]
+          s = s[0, max_len - 1] || ''
           s += '…'
         end
         print s
