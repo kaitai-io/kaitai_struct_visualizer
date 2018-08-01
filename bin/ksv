@@ -28,6 +28,11 @@ parser = OptionParser.new do |opts|
     options[:opaque_types] = v
   end
 
+  opts.on("-r", "--require [PATH]", 'load ("require") .rb file into Ruby process') do |v|
+    $LOAD_PATH << '.' unless $LOAD_PATH.include?('.')
+    require v
+  end
+
   opts.on("--version", "show versions of ksv and ksc") do |v|
     puts "kaitai-struct-visualizer #{Kaitai::Struct::Visualizer::VERSION}"
     system("ksc", "--version")
