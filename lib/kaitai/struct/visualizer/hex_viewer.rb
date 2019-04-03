@@ -10,7 +10,7 @@ class HexViewer
     @shift_x = 0
     @tree = tree
 
-    @embedded = not(tree.nil?)
+    @embedded = !(tree.nil?)
     @max_scr_ln = @ui.rows - 3
 
     @addr = 0
