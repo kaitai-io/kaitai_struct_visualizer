@@ -39,7 +39,7 @@ out source code in repository:
 
 ## Usage
 
-`ksv <binary-file> <ksy-file>...`
+`ksv <binary-file> <ksy-file>...|<rb-file>`
 
 ## Licensing
 

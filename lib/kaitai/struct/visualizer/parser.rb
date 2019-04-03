@@ -22,7 +22,7 @@ class Parser
   end
 
   def load
-    main_class_name = @compiler.compile_formats(@formats_fn)
+    main_class_name = @compiler.compile_formats_if(@formats_fn)
 
     main_class = Kernel::const_get(main_class_name)
     @data = main_class.from_file(@bin_fn)

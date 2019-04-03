@@ -17,7 +17,7 @@ require 'kaitai/struct/visualizer'
 
 options = {}
 parser = OptionParser.new do |opts|
-  opts.banner = "Usage: #{File.basename($PROGRAM_NAME)} [options] <file_to_parse.bin> <format.ksy>..."
+  opts.banner = "Usage: #{File.basename($PROGRAM_NAME)} [options] <file_to_parse.bin> <format.ksy>...|<format.rb>"
   opts.separator ""
 
   opts.on("-I", "--import-path [DIRECTORIES]", ".ksy library search path(s) for imports (see also KSPATH env variable)") do |v|
