@@ -17,7 +17,7 @@ class KSYCompiler
     errs = false
     main_class_name = nil
     Dir.mktmpdir { |code_dir|
-      args = ['--ksc-json-output', '--debug', '-t', 'ruby', *fns, '-d', code_dir]
+      args = ['--ksc-json-output', '--debug', '-t', 'ruby', '-d', code_dir, *fns]
 
       # Extra arguments
       extra = []
