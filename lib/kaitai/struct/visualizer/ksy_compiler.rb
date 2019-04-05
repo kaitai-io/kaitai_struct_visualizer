@@ -33,15 +33,7 @@ class KSYCompiler
       # on Windows.
       args.unshift('--') unless Kaitai::TUI::is_windows?
 
-      status = nil
-      log_str = nil
-      err_str = nil
-      Open3.popen3('kaitai-struct-compiler', *args) { |stdin, stdout, stderr, wait_thr|
-        status = wait_thr.value
-        log_str = stdout.read
-        err_str = stderr.read
-      }
-
+      log_str, err_str, status = Open3.capture3('kaitai-struct-compiler', *args)
       if not status.success?
         if status.exitstatus == 127
           @out.puts "ksv: unable to find and execute kaitai-struct-compiler in your PATH"
