@@ -142,6 +142,7 @@ class ConsoleWindows
       input << GETCH.call.chr
     end
 
+    # https://github.com/kaitai-io/kaitai_struct_visualizer/issues/14
     get_term_size
     @on_resize.call if @on_resize
 
