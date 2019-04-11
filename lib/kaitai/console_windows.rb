@@ -144,7 +144,7 @@ class ConsoleWindows
 
     # https://github.com/kaitai-io/kaitai_struct_visualizer/issues/14
     get_term_size
-    @on_resize.call if @on_resize
+    @on_resize.call(false) if @on_resize
 
     return input
   end
