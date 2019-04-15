@@ -97,6 +97,7 @@ class Node
         pos += 3
         @str_mode = detect_str_mode unless @str_mode
         max_len = @tree.tree_width - pos
+
         case @str_mode
         when :str
           v = @value.encode('UTF-8')
@@ -109,6 +110,8 @@ class Node
         else
           raise "Invalid str_mode: #{@str_mode.inspect}"
         end
+
+        s = s || ''
         if s.length > max_len
           s = s[0, max_len - 1] || ''
           s += '…'
