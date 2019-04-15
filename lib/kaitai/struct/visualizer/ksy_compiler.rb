@@ -13,6 +13,24 @@ class KSYCompiler
     @out = out
   end
 
+  def compile_formats_if(fns)
+    if (fns.length > 1) || fns[0].end_with?('.ksy')
+      return compile_formats(fns)
+    end
+
+    fname = File.basename(fns[0], '.rb')
+    dname = File.dirname( fns[0])
+    gpath = File.expand_path('*.rb', dname)
+
+    Dir.glob(gpath) { |fname|
+      @out.puts "Loading: #{fname}"
+      require File.expand_path(fname, dname)
+    }
+
+    # The name of the main class is that of the given file by convention.
+    return fname.split('_').map(&:capitalize).join()
+  end
+
   def compile_formats(fns)
     errs = false
     main_class_name = nil
@@ -87,7 +105,6 @@ class KSYCompiler
           end
         end
       }
-
     }
 
     if errs
