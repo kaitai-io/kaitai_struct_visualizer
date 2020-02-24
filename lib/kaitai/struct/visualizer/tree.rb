@@ -237,7 +237,7 @@ class Tree
 
   def self.explore_object(obj, level)
     root = Node.new(obj, level)
-    if obj.is_a?(Fixnum) or obj.is_a?(String)
+    if obj.is_a?(Integer) or obj.is_a?(String)
       # do nothing else
     elsif obj.is_a?(Array)
       root = Node.new(obj, level)

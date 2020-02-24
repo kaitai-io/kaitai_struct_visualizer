@@ -40,9 +40,8 @@ class Node
 
   def openable?
     not (
-      @value.is_a?(Fixnum) or
-      @value.is_a?(Bignum) or
       @value.is_a?(Float) or
+      @value.is_a?(Integer) or
       @value.is_a?(String) or
       @value.is_a?(Symbol) or
       @value === true or
@@ -88,7 +87,7 @@ class Node
     pos = 2 * level + 4 + @id.length
 
     if open? or not openable?
-      if @value.is_a?(Fixnum) or @value.is_a?(Bignum) or @value.is_a?(Float)
+      if @value.is_a?(Float) or @value.is_a?(Integer)
         print " = #{@value}"
       elsif @value.is_a?(Symbol)
         print " = #{@value}"
@@ -173,9 +172,8 @@ class Node
 
     @explored = true
 
-    if @value.is_a?(Fixnum) or
-       @value.is_a?(Bignum) or
-       @value.is_a?(Float) or
+    if @value.is_a?(Float) or
+       @value.is_a?(Integer) or
        @value.is_a?(String) or
        @value == true or
        @value == false or
