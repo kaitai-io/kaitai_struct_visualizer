@@ -18,6 +18,11 @@ for details on `.ksy` files and general usage patterns.
 
 ## Downloading and installing
 
+### Requirements
+- [ksc](http://kaitai.io/#quick-start) - kaitai-struct-compiler
+- [Java](https://openjdk.java.net/install/) 
+- [Ruby](https://www.ruby-lang.org/)
+
 ### From Ruby Gems repository
 
 KS visualizer is written in [Ruby](https://www.ruby-lang.org/) and is
