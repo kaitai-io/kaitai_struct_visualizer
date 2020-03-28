@@ -35,9 +35,13 @@ class ConsoleWindows
     # } CONSOLE_SCREEN_BUFFER_INFO;
 
     # 4 + 4 + 2 + 4 * 2 + 4 = 22
-       
+
+    get_term_size
+  end
+
+  def get_term_size
     csbi = 'X' * 22
-    
+
     GET_CONSOLE_SCREEN_BUFFER_INFO.call(@stdout_handle, csbi)
     @buf_cols, @buf_rows,
       cur_x, cur_y, cur_attr,
@@ -60,7 +64,7 @@ class ConsoleWindows
 #    reserved = 'XXXX'
 #    WRITE_CONSOLE.call(@stdout_handle, s, s.length, num_written, reserved)
   end
-  
+
   def clear
     con_size = @buf_cols * @buf_rows
     num_written = 'XXXX'
@@ -130,13 +134,18 @@ class ConsoleWindows
 
   ZERO_ESCAPE = 0.chr
   E0_ESCAPE = 0xe0.chr
-  
+
   # Reads keypresses from the user including 2 and 3 escape character sequences.
   def read_char
     input = GETCH.call.chr
     if input == E0_ESCAPE || input == ZERO_ESCAPE
       input << GETCH.call.chr
     end
+
+    # https://github.com/kaitai-io/kaitai_struct_visualizer/issues/14
+    get_term_size
+    @on_resize.call(false) if @on_resize
+
     return input
   end
 
@@ -248,7 +257,7 @@ class ConsoleWindows
   def current_color_code
     (@bg_color << 4) | @fg_color
   end
-  
+
   def update_colors
     SET_CONSOLE_TEXT_ATTRIBUTE.call(@stdout_handle, current_color_code)
   end

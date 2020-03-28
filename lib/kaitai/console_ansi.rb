@@ -21,7 +21,7 @@ class ConsoleANSI
 
     Signal.trap('SIGWINCH', proc {
       get_term_size
-      @on_resize.call if @on_resize
+      @on_resize.call(true) if @on_resize
     })
   end
 

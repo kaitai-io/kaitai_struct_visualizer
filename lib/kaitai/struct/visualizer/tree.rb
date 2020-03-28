@@ -22,10 +22,10 @@ class Tree
     @cur_shift = 0
     @do_exit = false
 
-    @ui.on_resize = proc {
+    @ui.on_resize = proc {|redraw_needed|
       recalc_sizes
-      redraw
-      @hv.redraw
+      redraw      if redraw_needed
+      @hv.redraw  if redraw_needed
     }
   end
 
