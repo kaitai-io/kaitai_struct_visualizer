@@ -30,7 +30,7 @@ EOF
   s.test_files = s.files.grep(%r{^(test|spec|features)/})
 
   s.add_development_dependency "bundler", "~> 1.3"
-  s.add_development_dependency 'rake', '~> 10'
+  s.add_development_dependency 'rake', '~> 12.3.3'
 #  s.add_development_dependency 'rspec', '~> 3'
 
   s.add_dependency 'kaitai-struct', "~> 0.4"
