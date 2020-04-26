@@ -5,6 +5,8 @@ require 'open3'
 require 'json'
 require 'tmpdir'
 
+require 'psych'
+
 module Kaitai::Struct::Visualizer
 
 class KSYCompiler
@@ -117,8 +119,63 @@ class KSYCompiler
     return main_class_name
   end
 
-  def report_err(err)
-    @out.puts "Error: #{err.inspect}"
+  def report_err(errs)
+    @out.puts((errs.length > 1 ? 'Errors' : 'Error') + ":\n\n")
+    errs.each { |err|
+      @out << err['file']
+
+      row = nil
+      col = nil
+
+      begin
+        node = resolve_yaml_path(err['file'], err['path'])
+
+        # Psych line numbers are 0-based, but we want 1-based
+        row = node.start_line + 1
+
+        # We're fine with 0-based columns
+        col = node.start_column
+      rescue
+        row = '!'
+        col = '!'
+      end
+
+      if row
+        @out << ':' << row
+        @out << ':' << col if col
+      end
+
+      @out << ':/' << err['path'].join('/') if err['path']
+      @out << ': ' << err['message'] << "\n"
+    }
+  end
+
+  ##
+  # Parses YAML file using Ruby's mid-level Psych API and resolve YAML
+  # path reported by ksc to row & column.
+  def resolve_yaml_path(file, path)
+    doc = Psych.parse(File.read(file))
+    yaml = doc.children[0]
+    path.each { |path_part|
+      yaml = psych_find(yaml, path_part)
+    }
+    yaml
+  end
+
+  def psych_find(yaml, path_part)
+    if yaml.is_a?(Psych::Nodes::Mapping)
+      # mapping are key-values, which are represented as [k1, v1, k2, v2, ...]
+      yaml.children.each_slice(2) { |map_key, map_value|
+        return map_value if map_key.value == path_part
+      }
+      return nil
+    elsif yaml.is_a?(Psych::Nodes::Sequence)
+      # sequences are just integer-indexed arrays - [a0, a1, a2, ...]
+      idx = Integer(path_part)
+      return yaml.children[idx]
+    else
+      raise "Unknown Psych component encountered: #{yaml.class}"
+    end
   end
 end
 
