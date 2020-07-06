@@ -50,7 +50,7 @@ module Kaitai::Struct::Visualizer
         # '-d' (which allows to pass defines to JVM). Windows-based systems
         # do not need and do not support this extra '--', so we don't add it
         # on Windows.
-        args.unshift('--') unless Kaitai::TUI.is_windows?
+        args.unshift('--') unless Kaitai::TUI.windows?
 
         log_str, err_str, status = Open3.capture3('kaitai-struct-compiler', *args)
         unless status.success?

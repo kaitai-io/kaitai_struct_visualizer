@@ -10,7 +10,7 @@ module Kaitai
     attr_reader :highlight_colors
 
     def initialize
-      if TUI.is_windows?
+      if TUI.windows?
         require 'kaitai/console_windows'
         @console = ConsoleWindows.new
         @highlight_colors = %i[white aqua blue green white]
@@ -90,10 +90,10 @@ module Kaitai
 
     # Regexp borrowed from
     # http://stackoverflow.com/questions/170956/how-can-i-find-which-operating-system-my-ruby-program-is-running-on
-    @@is_windows = RUBY_PLATFORM =~ /cygwin|mswin|mingw|bccwin|wince|emx/ ? true : false
+    @@is_windows = (RUBY_PLATFORM =~ /cygwin|mswin|mingw|bccwin|wince|emx/) ? true : false
 
     # Detects if current platform is Windows-based.
-    def self.is_windows?
+    def self.windows?
       @@is_windows
     end
   end

@@ -36,17 +36,17 @@ module Kaitai
 
       # 4 + 4 + 2 + 4 * 2 + 4 = 22
 
-      get_term_size
+      load_term_size
     end
 
-    def get_term_size
+    def load_term_size
       csbi = 'X' * 22
 
       GET_CONSOLE_SCREEN_BUFFER_INFO.call(@stdout_handle, csbi)
       @buf_cols, @buf_rows,
-        cur_x, cur_y, cur_attr,
+        _cur_x, _cur_y, _cur_attr,
         win_left, win_top, win_right, win_bottom,
-        max_win_x, max_win_y = csbi.unpack('vvvvvvvvvvv')
+        _max_win_x, _max_win_y = csbi.unpack('vvvvvvvvvvv')
 
       # Getting size of actual visible portion of Windows console
       # http://stackoverflow.com/a/12642749/487064
@@ -139,7 +139,7 @@ module Kaitai
       input << GETCH.call.chr if input == E0_ESCAPE || input == ZERO_ESCAPE
 
       # https://github.com/kaitai-io/kaitai_struct_visualizer/issues/14
-      get_term_size
+      load_term_size
       @on_resize&.call(false)
 
       input
@@ -242,10 +242,10 @@ module Kaitai
 
     # Regexp borrowed from
     # http://stackoverflow.com/questions/170956/how-can-i-find-which-operating-system-my-ruby-program-is-running-on
-    @@is_windows = RUBY_PLATFORM =~ /cygwin|mswin|mingw|bccwin|wince|emx/ ? true : false
+    @@is_windows = (RUBY_PLATFORM =~ /cygwin|mswin|mingw|bccwin|wince|emx/) ? true : false
 
     # Detects if current platform is Windows-based.
-    def self.is_windows?
+    def self.windows?
       @@is_windows
     end
 

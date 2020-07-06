@@ -192,9 +192,7 @@ module Kaitai::Struct::Visualizer
 
         clean_id = @id[0] == '@' ? @id[1..-1] : @id
         debug_el = @parent.value._debug[clean_id]
-        unless debug_el
-          raise "Unable to get debugging aid for array: #{@parent.value._debug.inspect} using ID '#{clean_id}'"
-        end
+        raise "Unable to get debugging aid for array: #{@parent.value._debug.inspect} using ID '#{clean_id}'" unless debug_el
 
         aid = debug_el[:arr]
         raise "Unable to get debugging aid for array: #{debug_el.inspect}" unless aid
@@ -211,7 +209,7 @@ module Kaitai::Struct::Visualizer
       else
         # Gather seq attributes
         @value.class::SEQ_FIELDS.each do |k|
-          el = @value.instance_eval("@#{k}")
+          el = @value.instance_eval("@#{k}", __FILE__, __LINE__)
           aid = @value._debug[k]
           if aid
             aid_s = aid[:start]

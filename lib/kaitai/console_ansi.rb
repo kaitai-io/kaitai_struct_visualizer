@@ -9,7 +9,7 @@ module Kaitai
     attr_reader :rows
 
     def initialize
-      get_term_size
+      load_term_size
 
       @seq_clear = `tput clear`
       @seq_sgr0 = `tput sgr0`
@@ -20,14 +20,14 @@ module Kaitai
       @on_resize = nil
 
       Signal.trap('SIGWINCH', proc {
-        get_term_size
+        load_term_size
         @on_resize&.call(true)
       })
     end
 
     attr_writer :on_resize
 
-    def get_term_size
+    def load_term_size
       @rows, @cols = IO.console.winsize
     end
 
