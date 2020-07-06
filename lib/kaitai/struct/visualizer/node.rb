@@ -134,7 +134,7 @@ module Kaitai::Struct::Visualizer
 
     def first_n_bytes_dump(s, n)
       i = 0
-      r = ''
+      r = ''.dup
       s.each_byte do |x|
         r << format('%02x ', x)
         i += 1

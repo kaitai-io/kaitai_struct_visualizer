@@ -1,4 +1,5 @@
 #!/usr/bin/env ruby
+# frozen_string_literal: true
 
 require 'optparse'
 
@@ -18,24 +19,24 @@ require 'kaitai/struct/visualizer'
 options = {}
 parser = OptionParser.new do |opts|
   opts.banner = "Usage: #{File.basename($PROGRAM_NAME)} [options] <file_to_parse.bin> <format.ksy>...|<format.rb>"
-  opts.separator ""
+  opts.separator ''
 
-  opts.on("-I", "--import-path [DIRECTORIES]", ".ksy library search path(s) for imports (see also KSPATH env variable)") do |v|
+  opts.on('-I', '--import-path [DIRECTORIES]', '.ksy library search path(s) for imports (see also KSPATH env variable)') do |v|
     options[:import_path] = v
   end
 
-  opts.on("--opaque-types [BOOLEAN]", "opaque types allowed, default: false") do |v|
+  opts.on('--opaque-types [BOOLEAN]', 'opaque types allowed, default: false') do |v|
     options[:opaque_types] = v
   end
 
-  opts.on("-r", "--require [PATH]", 'load ("require") .rb file into Ruby process') do |v|
+  opts.on('-r', '--require [PATH]', 'load ("require") .rb file into Ruby process') do |v|
     $LOAD_PATH << '.' unless $LOAD_PATH.include?('.')
     require v
   end
 
-  opts.on("--version", "show versions of ksv and ksc") do |v|
+  opts.on('--version', 'show versions of ksv and ksc') do |_v|
     puts "kaitai-struct-visualizer #{Kaitai::Struct::Visualizer::VERSION}"
-    system("ksc", "--version")
+    system('ksc', '--version')
     exit 0
   end
 end

@@ -153,8 +153,8 @@ module Kaitai::Struct::Visualizer
 
       @cur_line = 0 if @cur_line.negative?
 
-      @cur_shift = @cur_line if @cur_line - @cur_shift.negative?
-      @cur_shift = @cur_line - @max_scr_ln if @cur_line - @cur_shift > @max_scr_ln
+      @cur_shift = @cur_line if (@cur_line - @cur_shift).negative?
+      @cur_shift = @cur_line - @max_scr_ln if (@cur_line - @cur_shift) > @max_scr_ln
     end
 
     def redraw

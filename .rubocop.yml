@@ -1,8 +1,7 @@
 # RuboCop Default Config: https://github.com/rubocop-hq/rubocop/blob/master/config/default.yml
 
 AllCops:
-  Exclude:
-    - 'bin/**/*'
+  NewCops: disable
 
 Style/ClassAndModuleChildren:
   Enabled: false
