@@ -25,7 +25,7 @@ Gem::Specification.new do |s|
   s.required_rubygems_version = Gem::Requirement.new('>= 0') if s.respond_to? :required_rubygems_version=
   s.require_paths = ['lib']
 
-  s.files = `git ls-files`.split("\n")
+  s.files = Dir['lib/**/*.rb'] + Dir['bin/*'] + Dir['spec/*']
   s.executables = s.files.grep(%r{^bin/}) { |f| File.basename(f) }
   s.test_files = s.files.grep(%r{^(test|spec|features)/})
 
