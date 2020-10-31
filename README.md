@@ -52,9 +52,21 @@ git clone https://github.com/kaitai-io/kaitai_struct_visualizer
 ksv <binary-file> <ksy-file>... | <rb-file>
 ```
 
+### Running with Docker
+
+Running image from Docker Hub:
+```shell
+docker run -v "$(pwd):/share" -it kaitai/ksv <binary-file> <ksy-file>
+```
+
+Rebuilding the image from local files:
+```shell
+docker build . --tag docker.io/kaitai/ksv
+```
+
 ## Licensing
 
-Kaitai Struct visualizer is copyright (C) 2015-2017 Kaitai Project.
+Kaitai Struct visualizer is copyright (C) 2015-2021 Kaitai Project.
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
