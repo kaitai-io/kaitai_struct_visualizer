@@ -2,6 +2,8 @@
 
 This is a simple visualizer for [Kaitai Struct](https://github.com/kaitai-io/kaitai_struct) project.
 
+![screenshot](screenshot.png)
+
 Kaitai Struct is a declarative language used for describe various
 binary data structures, laid out in files or in memory: i.e. binary
 file formats, network stream packet formats, etc.
