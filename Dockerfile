@@ -10,10 +10,12 @@ RUN apt-key adv --keyserver hkp://pool.sks-keyservers.net --recv 379CE192D401AB6
 
 # Copy gem sources
 COPY . /app
-WORKDIR /app
 
 # Build and install gem
-RUN gem build -o ksv.gem kaitai-struct-visualizer \
+RUN cd /app \
+      && gem build -o ksv.gem kaitai-struct-visualizer \
       && gem install ksv.gem
+
+WORKDIR /share
 
 ENTRYPOINT ["/usr/local/bundle/bin/ksv"]
