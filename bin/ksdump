@@ -1,4 +1,5 @@
 #!/usr/bin/env ruby
+# frozen_string_literal: true
 
 require 'optparse'
 
@@ -15,25 +16,25 @@ require 'kaitai/struct/visualizer'
 
 # ======================================================================
 
-options = {:format => 'yaml'}
+options = { format: 'yaml' }
 parser = OptionParser.new do |opts|
-  $prog_name = File.basename($PROGRAM_NAME)
+  prog_name = File.basename($PROGRAM_NAME)
 
-  opts.banner = "Usage: #{$prog_name} [options] <file_to_parse.bin> <format.ksy>..."
-  opts.separator ""
+  opts.banner = "Usage: #{prog_name} [options] <file_to_parse.bin> <format.ksy>..."
+  opts.separator ''
 
-  opts.on("-I", "--import-path [DIRECTORIES]", ".ksy library search path(s) for imports (see also KSPATH env variable)") do |v|
+  opts.on('-I', '--import-path [DIRECTORIES]', '.ksy library search path(s) for imports (see also KSPATH env variable)') do |v|
     options[:import_path] = v
   end
 
-  FORMATS = ['json', 'xml', 'yaml']
-  opts.on("-f", "--format FORMAT", FORMATS, "choose dump format - #{FORMATS.join(', ')} (default: #{options[:format]})") do |v|
+  FORMATS = %w[json xml yaml].freeze
+  opts.on('-f', '--format FORMAT', FORMATS, "choose dump format - #{FORMATS.join(', ')} (default: #{options[:format]})") do |v|
     options[:format] = v
   end
 
-  opts.on("--version", "show versions of #{$prog_name} and ksc") do |v|
-    puts "#{$prog_name} #{Kaitai::Struct::Visualizer::VERSION}"
-    system("ksc", "--version")
+  opts.on('--version', "show versions of #{prog_name} and ksc") do |_v|
+    puts "#{prog_name} #{Kaitai::Struct::Visualizer::VERSION}"
+    system('ksc', '--version')
     exit 0
   end
 end
@@ -58,14 +59,14 @@ app.load
 # ======================================================================
 
 def obj_to_h(obj)
-  if obj == true or obj == false or obj.is_a?(Numeric) or obj.nil?
+  if (obj == true) || (obj == false) || obj.is_a?(Numeric) || obj.nil?
     obj
   elsif obj.is_a?(Symbol)
     obj.to_s
   elsif obj.is_a?(String)
     if obj.encoding == Encoding::ASCII_8BIT
-      r = ''
-      obj.each_byte { |x| r << sprintf('%02X ', x) }
+      r = ''.dup
+      obj.each_byte { |x| r << format('%02X ', x) }
       r.chop!
       r
     else
@@ -78,30 +79,31 @@ def obj_to_h(obj)
     valid_struct = false
 
     common_meths = Set.new
-    obj.class.ancestors.each { |cl|
+    obj.class.ancestors.each do |cl|
       next if cl == obj.class
+
       valid_struct = true if cl == Kaitai::Struct::Struct
       common_meths.merge(cl.instance_methods)
-    }
+    end
 
-    return "OPAQUE (#{obj.class.to_s})" if not valid_struct
+    return "OPAQUE (#{obj.class})" unless valid_struct
 
     inst_meths = Set.new(obj.public_methods) - common_meths
-    inst_meths.sort.each { |meth|
+    inst_meths.sort.each do |meth|
       k = meth.to_s
       next if k =~ /^_/ # or attrs.include?(k)
 
       el = obj.send(meth)
       v = obj_to_h(el)
       root[k] = v unless v.nil?
-    }
+    end
 
-#    obj.instance_variables.each { |k|
-#      k = k.to_s
-#      next if k =~ /^@_/
-#      el = obj.instance_eval(k)
-#      root[k[1..-1]] = obj_to_h(el)
-#    }
+    # obj.instance_variables.each { |k|
+    #   k = k.to_s
+    #   next if k =~ /^@_/
+    #   el = obj.instance_eval(k)
+    #   root[k[1..-1]] = obj_to_h(el)
+    # }
     root
   end
 end
