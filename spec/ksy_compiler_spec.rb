@@ -24,8 +24,8 @@ module Kaitai::Struct::Visualizer
 
     context '#report_err' do
       it 'formats attr_bad_if2' do
-        err_str = '[{"file": "attr_bad_if2.ksy", \
-          "message": "invalid type: expected boolean, got CalcIntType", \
+        err_str = '[{"file": "attr_bad_if2.ksy",
+          "message": "invalid type: expected boolean, got CalcIntType",
           "path": ["types", "foo_type", "instances", "foo", "if"]}]'
         err = JSON.parse(err_str)
         c.report_err(err)
