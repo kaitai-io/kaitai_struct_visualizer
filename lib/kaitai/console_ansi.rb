@@ -112,7 +112,7 @@ module Kaitai
       $stdin.echo = true
       $stdin.cooked!
 
-      input
+      return input
     end
 
     def read_char_mapped
