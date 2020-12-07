@@ -15,8 +15,13 @@ module Kaitai
         @console = ConsoleWindows.new
         @highlight_colors = %i[white aqua blue green white]
       else
-        require 'kaitai/console_ansi'
-        @console = ConsoleANSI.new
+        begin
+          require 'kaitai/console_curses'
+          @console = ConsoleCurses.new
+        rescue LoadError
+          require 'kaitai/console_ansi'
+          @console = ConsoleANSI.new
+        end
         @highlight_colors = %i[gray14 gray11 gray8 gray5 gray2]
       end
     end
