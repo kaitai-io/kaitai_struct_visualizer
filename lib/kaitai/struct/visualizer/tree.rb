@@ -26,6 +26,7 @@ module Kaitai::Struct::Visualizer
 
       @ui.on_resize = proc { |redraw_needed|
         recalc_sizes
+        @hv.recalc_sizes
         redraw      if redraw_needed
         @hv.redraw  if redraw_needed
       }

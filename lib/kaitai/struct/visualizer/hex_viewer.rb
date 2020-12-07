@@ -13,12 +13,16 @@ module Kaitai::Struct::Visualizer
       @tree = tree
 
       @embedded = !tree.nil?
-      @max_scr_ln = @ui.rows - 3
+      recalc_sizes
 
       @addr = 0
       @scroll_y = 0
       reset_cur
       raise if @cur_x.nil?
+    end
+
+    def recalc_sizes
+      @max_scr_ln = @ui.rows - 3
     end
 
     attr_writer :buf
