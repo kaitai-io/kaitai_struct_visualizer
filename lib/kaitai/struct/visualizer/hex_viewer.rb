@@ -58,7 +58,7 @@ module Kaitai::Struct::Visualizer
       c = nil
       loop do
         @ui.goto(0, @max_scr_ln + 1)
-        printf '%08x (%d, %d)', @addr, @cur_x, @cur_y
+        @ui.printf '%08x (%d, %d)', @addr, @cur_x, @cur_y
 
         @ui.goto(col_to_col_char(@cur_x), row_to_scr(@cur_y))
         c = @ui.read_char_mapped
@@ -181,7 +181,7 @@ module Kaitai::Struct::Visualizer
         hex = line.bytes.map { |x| format('%02x', x) }.join(' ')
         char = line.bytes.map { |x| byte_to_display_char(x) }.join
 
-        printf FMT, i, hex, char
+        @ui.printf FMT, i, hex, char
         i += PER_LINE
         row += 1
       end
@@ -237,7 +237,7 @@ module Kaitai::Struct::Visualizer
         v = byte_at(i)
         return if v.nil?
 
-        printf('%02x ', v)
+        @ui.printf('%02x ', v)
         c += 1
         if c >= PER_LINE
           c = 0
@@ -257,7 +257,7 @@ module Kaitai::Struct::Visualizer
         v = byte_at(i)
         return if v.nil?
 
-        print byte_to_display_char(v)
+        @ui.print byte_to_display_char(v)
         c += 1
         if c >= PER_LINE
           c = 0

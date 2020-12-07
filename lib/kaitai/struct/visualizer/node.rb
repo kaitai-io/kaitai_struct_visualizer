@@ -76,8 +76,8 @@ module Kaitai::Struct::Visualizer
     end
 
     def draw(_ui)
-      print '  ' * level
-      print(if @value.nil?
+      _ui.print '  ' * level
+      _ui.print(if @value.nil?
               '[?]'
             elsif open?
               '[-]'
@@ -86,17 +86,17 @@ module Kaitai::Struct::Visualizer
             else
               '[.]'
             end)
-      print " #{@id}"
+      _ui.print " #{@id}"
 
       pos = 2 * level + 4 + @id.length
 
       if open? || !openable?
         if @value.is_a?(Float) || @value.is_a?(Integer)
-          print " = #{@value}"
+          _ui.print " = #{@value}"
         elsif @value.is_a?(Symbol)
-          print " = #{@value}"
+          _ui.print " = #{@value}"
         elsif @value.is_a?(String)
-          print ' = '
+          _ui.print ' = '
           pos += 3
           @str_mode ||= detect_str_mode
           max_len = @tree.tree_width - pos
@@ -119,17 +119,17 @@ module Kaitai::Struct::Visualizer
             s = s[0, max_len - 1] || ''
             s += '…'
           end
-          print s
+          _ui.print s
         elsif (@value == true) || (@value == false)
-          print " = #{@value}"
+          _ui.print " = #{@value}"
         elsif @value.nil?
-          print ' = null'
+          _ui.print ' = null'
         elsif @value.is_a?(Array)
-          printf ' (%d = 0x%x entries)', @value.size, @value.size
+          _ui.printf ' (%d = 0x%x entries)', @value.size, @value.size
         end
       end
 
-      puts
+      _ui.puts
     end
 
     def first_n_bytes_dump(s, n)

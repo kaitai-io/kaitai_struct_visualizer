@@ -68,9 +68,10 @@ module Kaitai::Struct::Visualizer
         end
 
         @ui.goto(0, @max_scr_ln + 1)
-        printf 'all: %d, tree: %d, tree_draw: %d, hexview: %d, ln: %d, ', (t + thv) * 1e6, t * 1e6, @draw_time * 1e6, thv * 1e6, @ln
-        puts "highlight = #{@cur_node.pos1}..#{@cur_node.pos2}"
+        @ui.printf 'all: %d, tree: %d, tree_draw: %d, hexview: %d, ln: %d, ', (t + thv) * 1e6, t * 1e6, @draw_time * 1e6, thv * 1e6, @ln
+        @ui.puts "highlight = #{@cur_node.pos1}..#{@cur_node.pos2}"
         # puts "keypress: #{c.inspect}"
+        @ui.refresh
 
         begin
           process_keypress
