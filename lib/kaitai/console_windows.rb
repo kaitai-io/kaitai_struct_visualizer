@@ -56,11 +56,22 @@ module Kaitai
 
     attr_writer :on_resize
 
-    def puts(s)
-      Kernel.puts s
+    def refresh
+    end
+
+    def print(*args)
+      Kernel.print(*args)
+    end
+
+    def puts(*args)
+      Kernel.puts(*args)
       # num_written = 'XXXX'
       # reserved = 'XXXX'
       # WRITE_CONSOLE.call(@stdout_handle, s, s.length, num_written, reserved)
+    end
+
+    def readline
+      Readline.readline('', false)
     end
 
     def clear
