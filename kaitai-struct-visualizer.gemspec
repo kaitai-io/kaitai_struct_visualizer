@@ -13,7 +13,7 @@ Gem::Specification.new do |s|
 
   s.homepage = 'http://kaitai.io'
   s.summary = 'Advanced hex viewer and binary structure exploration tool (visualizer) using Kaitai Struct ksy files'
-  s.license = 'GPL-3.0+'
+  s.license = 'GPL-3.0-or-later'
   s.description = <<~DESC
     Kaitai Struct is a declarative language used for describe various binary data structures, laid out in files or in memory: i.e. binary file formats, network stream packet formats, etc.
 
