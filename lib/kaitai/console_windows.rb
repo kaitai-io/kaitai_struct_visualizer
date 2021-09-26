@@ -1,24 +1,26 @@
 # frozen_string_literal: true
 
-require 'Win32API'
+require 'win32/api'
 require 'readline'
+
+include Win32
 
 module Kaitai
   class ConsoleWindows
     attr_reader :cols
     attr_reader :rows
 
-    GET_STD_HANDLE = Win32API.new('kernel32', 'GetStdHandle', 'L', 'L')
-    GET_CONSOLE_SCREEN_BUFFER_INFO = Win32API.new('kernel32', 'GetConsoleScreenBufferInfo', 'LP', 'L')
+    GET_STD_HANDLE = API.new('GetStdHandle', 'L', 'L', 'kernel32')
+    GET_CONSOLE_SCREEN_BUFFER_INFO = API.new('GetConsoleScreenBufferInfo', 'LP', 'L', 'kernel32')
 
-    FILL_CONSOLE_OUTPUT_ATTRIBUTE = Win32API.new('kernel32', 'FillConsoleOutputAttribute', 'LILLP', 'I')
-    FILL_CONSOLE_OUTPUT_CHARACTER = Win32API.new('kernel32', 'FillConsoleOutputCharacter', 'LILLP', 'I')
-    SET_CONSOLE_CURSOR_POSITION = Win32API.new('kernel32', 'SetConsoleCursorPosition', 'LI', 'I')
-    SET_CONSOLE_TEXT_ATTRIBUTE = Win32API.new('kernel32', 'SetConsoleTextAttribute', 'LL', 'I')
+    FILL_CONSOLE_OUTPUT_ATTRIBUTE = API.new('FillConsoleOutputAttribute', 'LILLP', 'I', 'kernel32')
+    FILL_CONSOLE_OUTPUT_CHARACTER = API.new('FillConsoleOutputCharacter', 'LILLP', 'I', 'kernel32')
+    SET_CONSOLE_CURSOR_POSITION = API.new('SetConsoleCursorPosition', 'LI', 'I', 'kernel32')
+    SET_CONSOLE_TEXT_ATTRIBUTE = API.new('SetConsoleTextAttribute', 'LL', 'I', 'kernel32')
 
-    WRITE_CONSOLE = Win32API.new('kernel32', 'WriteConsole', %w[l p l p p], 'l')
+    WRITE_CONSOLE = API.new("WriteConsole", "LPLPP", 'L', "kernel32")
 
-    GETCH = Win32API.new('msvcrt', '_getch', [], 'I')
+    GETCH = API.new("_getch", [], 'I', "msvcrt")
 
     def initialize
       @stdin_handle = GET_STD_HANDLE.call(-10)
