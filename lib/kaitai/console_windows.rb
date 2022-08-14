@@ -1,26 +1,33 @@
 # frozen_string_literal: true
 
-require 'win32/api'
+require 'fiddle'
 require 'readline'
 
-include Win32
+include Fiddle
 
 module Kaitai
   class ConsoleWindows
     attr_reader :cols
     attr_reader :rows
 
-    GET_STD_HANDLE = API.new('GetStdHandle', 'L', 'L', 'kernel32')
-    GET_CONSOLE_SCREEN_BUFFER_INFO = API.new('GetConsoleScreenBufferInfo', 'LP', 'L', 'kernel32')
+    kernel32 = dlopen('kernel32')
 
-    FILL_CONSOLE_OUTPUT_ATTRIBUTE = API.new('FillConsoleOutputAttribute', 'LILLP', 'I', 'kernel32')
-    FILL_CONSOLE_OUTPUT_CHARACTER = API.new('FillConsoleOutputCharacter', 'LILLP', 'I', 'kernel32')
-    SET_CONSOLE_CURSOR_POSITION = API.new('SetConsoleCursorPosition', 'LI', 'I', 'kernel32')
-    SET_CONSOLE_TEXT_ATTRIBUTE = API.new('SetConsoleTextAttribute', 'LL', 'I', 'kernel32')
+    dword = TYPE_LONG
+    word = TYPE_SHORT
+    ptr = TYPE_VOIDP
+    handle = TYPE_LONG
 
-    WRITE_CONSOLE = API.new("WriteConsole", "LPLPP", 'L', "kernel32")
+    GET_STD_HANDLE = Function.new(kernel32['GetStdHandle'], [dword], handle)
+    GET_CONSOLE_SCREEN_BUFFER_INFO = Function.new(kernel32['GetConsoleScreenBufferInfo'], [handle, ptr], dword)
 
-    GETCH = API.new("_getch", [], 'I', "msvcrt")
+    FILL_CONSOLE_OUTPUT_ATTRIBUTE = Function.new(kernel32['FillConsoleOutputAttribute'], [handle, word, dword, dword, ptr], dword)
+    FILL_CONSOLE_OUTPUT_CHARACTER = Function.new(kernel32['FillConsoleOutputCharacter'], [handle, word, dword, dword, ptr], dword)
+    SET_CONSOLE_CURSOR_POSITION = Function.new(kernel32['SetConsoleCursorPosition'], [handle, dword], dword)
+    SET_CONSOLE_TEXT_ATTRIBUTE = Function.new(kernel32['SetConsoleTextAttribute'], [handle, dword], dword)
+
+    WRITE_CONSOLE = Function.new(kernel32['WriteConsole'], [handle, ptr, dword, ptr, ptr], dword)
+
+    GETCH = Function.new(dlopen("msvcrt")['_getch'], [], word)
 
     def initialize
       @stdin_handle = GET_STD_HANDLE.call(-10)

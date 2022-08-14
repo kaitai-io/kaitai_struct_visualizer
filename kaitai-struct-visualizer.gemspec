@@ -34,5 +34,4 @@ Gem::Specification.new do |s|
   # s.add_development_dependency 'rspec', '~> 3'
 
   s.add_dependency 'kaitai-struct', '~> 0.4'
-  s.add_dependency 'win32-api', '~> 1.10.1'
 end
