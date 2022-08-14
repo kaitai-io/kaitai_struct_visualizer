@@ -13,7 +13,7 @@ module Kaitai
     dword = Fiddle::TYPE_LONG
     word = Fiddle::TYPE_SHORT
     ptr = Fiddle::TYPE_VOIDP
-    handle = Fiddle::TYPE_LONG
+    handle = Fiddle::TYPE_VOIDP
 
     GET_STD_HANDLE = Fiddle::Function.new(kernel32['GetStdHandle'], [dword], handle)
     GET_CONSOLE_SCREEN_BUFFER_INFO = Fiddle::Function.new(kernel32['GetConsoleScreenBufferInfo'], [handle, ptr], dword)
