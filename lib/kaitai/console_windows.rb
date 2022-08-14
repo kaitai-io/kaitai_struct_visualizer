@@ -27,7 +27,7 @@ module Kaitai
 
     WRITE_CONSOLE = Function.new(kernel32['WriteConsole'], [handle, ptr, dword, ptr, ptr], dword)
 
-    GETCH = Function.new(dlopen("msvcrt")['_getch'], [], word)
+    GETCH = Function.new(dlopen('msvcrt')['_getch'], [], word)
 
     def initialize
       @stdin_handle = GET_STD_HANDLE.call(-10)
