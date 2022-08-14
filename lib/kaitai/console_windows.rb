@@ -3,31 +3,29 @@
 require 'fiddle'
 require 'readline'
 
-include Fiddle
-
 module Kaitai
   class ConsoleWindows
     attr_reader :cols
     attr_reader :rows
 
-    kernel32 = dlopen('kernel32')
+    kernel32 = Fiddle.dlopen('kernel32')
 
-    dword = TYPE_LONG
-    word = TYPE_SHORT
-    ptr = TYPE_VOIDP
-    handle = TYPE_LONG
+    dword = Fiddle::TYPE_LONG
+    word = Fiddle::TYPE_SHORT
+    ptr = Fiddle::TYPE_VOIDP
+    handle = Fiddle::TYPE_LONG
 
-    GET_STD_HANDLE = Function.new(kernel32['GetStdHandle'], [dword], handle)
-    GET_CONSOLE_SCREEN_BUFFER_INFO = Function.new(kernel32['GetConsoleScreenBufferInfo'], [handle, ptr], dword)
+    GET_STD_HANDLE = Fiddle::Function.new(kernel32['GetStdHandle'], [dword], handle)
+    GET_CONSOLE_SCREEN_BUFFER_INFO = Fiddle::Function.new(kernel32['GetConsoleScreenBufferInfo'], [handle, ptr], dword)
 
-    FILL_CONSOLE_OUTPUT_ATTRIBUTE = Function.new(kernel32['FillConsoleOutputAttribute'], [handle, word, dword, dword, ptr], dword)
-    FILL_CONSOLE_OUTPUT_CHARACTER = Function.new(kernel32['FillConsoleOutputCharacter'], [handle, word, dword, dword, ptr], dword)
-    SET_CONSOLE_CURSOR_POSITION = Function.new(kernel32['SetConsoleCursorPosition'], [handle, dword], dword)
-    SET_CONSOLE_TEXT_ATTRIBUTE = Function.new(kernel32['SetConsoleTextAttribute'], [handle, dword], dword)
+    FILL_CONSOLE_OUTPUT_ATTRIBUTE = Fiddle::Function.new(kernel32['FillConsoleOutputAttribute'], [handle, word, dword, dword, ptr], dword)
+    FILL_CONSOLE_OUTPUT_CHARACTER = Fiddle::Function.new(kernel32['FillConsoleOutputCharacter'], [handle, word, dword, dword, ptr], dword)
+    SET_CONSOLE_CURSOR_POSITION = Fiddle::Function.new(kernel32['SetConsoleCursorPosition'], [handle, dword], dword)
+    SET_CONSOLE_TEXT_ATTRIBUTE = Fiddle::Function.new(kernel32['SetConsoleTextAttribute'], [handle, dword], dword)
 
-    WRITE_CONSOLE = Function.new(kernel32['WriteConsole'], [handle, ptr, dword, ptr, ptr], dword)
+    WRITE_CONSOLE = Fiddle::Function.new(kernel32['WriteConsole'], [handle, ptr, dword, ptr, ptr], dword)
 
-    GETCH = Function.new(dlopen('msvcrt')['_getch'], [], word)
+    GETCH = Fiddle::Function.new(dlopen('msvcrt')['_getch'], [], word)
 
     def initialize
       @stdin_handle = GET_STD_HANDLE.call(-10)
