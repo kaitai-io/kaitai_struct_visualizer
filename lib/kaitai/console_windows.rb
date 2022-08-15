@@ -25,7 +25,7 @@ module Kaitai
 
     WRITE_CONSOLE = Fiddle::Function.new(kernel32['WriteConsole'], [handle, ptr, dword, ptr, ptr], dword)
 
-    GETCH = Fiddle::Function.new(dlopen('msvcrt')['_getch'], [], word)
+    GETCH = Fiddle::Function.new(Fiddle.dlopen('msvcrt')['_getch'], [], word)
 
     def initialize
       @stdin_handle = GET_STD_HANDLE.call(-10)
