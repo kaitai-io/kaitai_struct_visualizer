@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require 'Win32API'
+require 'fiddle'
 require 'readline'
 
 module Kaitai
@@ -8,17 +8,24 @@ module Kaitai
     attr_reader :cols
     attr_reader :rows
 
-    GET_STD_HANDLE = Win32API.new('kernel32', 'GetStdHandle', 'L', 'L')
-    GET_CONSOLE_SCREEN_BUFFER_INFO = Win32API.new('kernel32', 'GetConsoleScreenBufferInfo', 'LP', 'L')
+    kernel32 = Fiddle.dlopen('kernel32')
 
-    FILL_CONSOLE_OUTPUT_ATTRIBUTE = Win32API.new('kernel32', 'FillConsoleOutputAttribute', 'LILLP', 'I')
-    FILL_CONSOLE_OUTPUT_CHARACTER = Win32API.new('kernel32', 'FillConsoleOutputCharacter', 'LILLP', 'I')
-    SET_CONSOLE_CURSOR_POSITION = Win32API.new('kernel32', 'SetConsoleCursorPosition', 'LI', 'I')
-    SET_CONSOLE_TEXT_ATTRIBUTE = Win32API.new('kernel32', 'SetConsoleTextAttribute', 'LL', 'I')
+    dword = Fiddle::TYPE_LONG
+    word = Fiddle::TYPE_SHORT
+    ptr = Fiddle::TYPE_VOIDP
+    handle = Fiddle::TYPE_VOIDP
 
-    WRITE_CONSOLE = Win32API.new('kernel32', 'WriteConsole', %w[l p l p p], 'l')
+    GET_STD_HANDLE = Fiddle::Function.new(kernel32['GetStdHandle'], [dword], handle)
+    GET_CONSOLE_SCREEN_BUFFER_INFO = Fiddle::Function.new(kernel32['GetConsoleScreenBufferInfo'], [handle, ptr], dword)
 
-    GETCH = Win32API.new('msvcrt', '_getch', [], 'I')
+    FILL_CONSOLE_OUTPUT_ATTRIBUTE = Fiddle::Function.new(kernel32['FillConsoleOutputAttribute'], [handle, word, dword, dword, ptr], dword)
+    FILL_CONSOLE_OUTPUT_CHARACTER = Fiddle::Function.new(kernel32['FillConsoleOutputCharacter'], [handle, word, dword, dword, ptr], dword)
+    SET_CONSOLE_CURSOR_POSITION = Fiddle::Function.new(kernel32['SetConsoleCursorPosition'], [handle, dword], dword)
+    SET_CONSOLE_TEXT_ATTRIBUTE = Fiddle::Function.new(kernel32['SetConsoleTextAttribute'], [handle, dword], dword)
+
+    WRITE_CONSOLE = Fiddle::Function.new(kernel32['WriteConsole'], [handle, ptr, dword, ptr, ptr], dword)
+
+    GETCH = Fiddle::Function.new(Fiddle.dlopen('msvcrt')['_getch'], [], word)
 
     def initialize
       @stdin_handle = GET_STD_HANDLE.call(-10)
