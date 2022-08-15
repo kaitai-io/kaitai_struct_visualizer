@@ -36,7 +36,7 @@ parser = OptionParser.new do |opts|
 
   opts.on('--version', 'show versions of ksv and ksc') do |_v|
     puts "kaitai-struct-visualizer #{Kaitai::Struct::Visualizer::VERSION}"
-    system('ksc', '--version')
+    system('kaitai-struct-compiler', '--version')
     exit 0
   end
 end
