@@ -80,7 +80,7 @@ module Kaitai::Struct::Visualizer
         fns.each_with_index do |fn, idx|
           @out.puts "... processing #{fn} #{idx}"
 
-          log_fn = log[fn]
+          log_fn = log[fn] || log[fn.gsub('/', '\\')]
           if log_fn['errors']
             report_err(log_fn['errors'])
             errs = true
@@ -92,7 +92,7 @@ module Kaitai::Struct::Visualizer
                 errs = true
               else
                 compiled_name = v['files'][0]['fileName']
-                compiled_path = "#{code_dir}/#{compiled_name}"
+                compiled_path = File.join(code_dir, compiled_name)
 
                 @out.puts "...... loading #{compiled_name}"
                 require compiled_path
