@@ -1,12 +1,13 @@
 FROM ruby
 
-# Install .ksy compiler and Java
-RUN apt-key adv --keyserver hkp://pool.sks-keyservers.net --recv 379CE192D401AB61 \
-       && echo "deb https://dl.bintray.com/kaitai-io/debian jessie main" | tee /etc/apt/sources.list.d/kaitai.list \
-       && apt-get update \
-       && apt-get -y install kaitai-struct-compiler \
+# Download Kaitai Struct compiler deb
+RUN curl -LO https://github.com/kaitai-io/kaitai_struct_compiler/releases/download/0.10/kaitai-struct-compiler_0.10_all.deb
+
+# Install it + Java + cleanup
+RUN apt-get update \
        && apt-get -y install openjdk-11-jre-headless \
-       && rm -rf /var/lib/apt/lists/*
+       && apt-get -y install ./kaitai-struct-compiler_0.10_all.deb \
+       && rm -rf /var/lib/apt/lists/* ./kaitai-struct-compiler_0.10_all.deb
 
 # Copy gem sources
 COPY . /app
