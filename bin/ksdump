@@ -57,7 +57,8 @@ end
 
 c = Kaitai::Struct::Visualizer::KSYCompiler.new(options)
 app = Kaitai::Struct::Visualizer::Parser.new(c, ARGV[0], ARGV[1..-1], options)
-app.load
+exc = app.load
+raise exc if exc
 
 # ======================================================================
 
