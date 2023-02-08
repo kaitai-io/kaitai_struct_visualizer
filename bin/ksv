@@ -34,12 +34,14 @@ parser = OptionParser.new do |opts|
     require v
   end
 
-  opts.on('--version', 'show versions of ksv and ksc') do |_v|
+  opts.on('--version', 'show versions of ksv, ksc and kaitai-struct (Kaitai Struct runtime library for Ruby)') do |_v|
     puts "kaitai-struct-visualizer #{Kaitai::Struct::Visualizer::VERSION}"
     if system('kaitai-struct-compiler', '--version').nil?
       $stderr.puts 'ksv: unable to find and run kaitai-struct-compiler in your PATH'
       exit 1
     end
+    require 'kaitai/struct/struct'
+    puts "kaitai-struct #{Kaitai::Struct::VERSION} (Kaitai Struct runtime library for Ruby)"
     exit 0
   end
 end
