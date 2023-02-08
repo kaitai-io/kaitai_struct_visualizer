@@ -3,6 +3,7 @@
 require 'kaitai/struct/visualizer/version'
 require 'kaitai/tui'
 require 'kaitai/struct/visualizer/tree'
+require 'kaitai/struct/visualizer/ks_error_matcher'
 
 # TODO: should be inside compiled files
 require 'zlib'
@@ -31,7 +32,7 @@ module Kaitai::Struct::Visualizer
         @data._read
       rescue EOFError => e
         load_exc = e
-      rescue Kaitai::Struct::Stream::UnexpectedDataError => e
+      rescue Kaitai::Struct::Visualizer::KSErrorMatcher => e
         load_exc = e
       end
 

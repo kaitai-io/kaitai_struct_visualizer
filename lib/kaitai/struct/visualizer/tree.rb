@@ -5,6 +5,7 @@ require 'benchmark'
 require 'kaitai/struct/visualizer/version'
 require 'kaitai/struct/visualizer/node'
 require 'kaitai/struct/visualizer/hex_viewer'
+require 'kaitai/struct/visualizer/ks_error_matcher'
 
 module Kaitai::Struct::Visualizer
   class Tree
@@ -74,7 +75,7 @@ module Kaitai::Struct::Visualizer
           process_keypress
         rescue EOFError => e
           @ui.message_box_exception(e)
-        rescue Kaitai::Struct::Stream::UnexpectedDataError => e
+        rescue Kaitai::Struct::Visualizer::KSErrorMatcher => e
           @ui.message_box_exception(e)
         end
 
