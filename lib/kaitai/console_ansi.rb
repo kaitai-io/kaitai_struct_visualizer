@@ -98,21 +98,19 @@ module Kaitai
       input = $stdin.getc.chr
       if input == "\e"
         begin
-          input << $stdin.read_nonblock(3)
-        rescue StandardError
-          nil
-        end
-        begin
-          input << $stdin.read_nonblock(2)
-        rescue StandardError
-          nil
+          # may return less than 3 bytes because it can only read as many bytes as are
+          # currently available
+          up_to_3bytes = $stdin.read_nonblock(3)
+          input << up_to_3bytes
+        rescue IO::WaitReadable
+          # not an ANSI sequence - the user probably just pressed the Esc key
         end
       end
-    ensure
+
       $stdin.echo = true
       $stdin.cooked!
 
-      return input
+      input
     end
 
     def read_char_mapped

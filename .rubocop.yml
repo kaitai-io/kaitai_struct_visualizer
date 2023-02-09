@@ -2,6 +2,7 @@
 
 AllCops:
   NewCops: disable
+  TargetRubyVersion: 2.4
 
 Style/ClassAndModuleChildren:
   Enabled: false
@@ -20,6 +21,9 @@ Style/TernaryParentheses:
 
 Layout/LineLength:
   Enabled: false
+
+Layout/EndOfLine:
+  EnforcedStyle: lf
 
 Naming/MethodParameterName:
   Enabled: false

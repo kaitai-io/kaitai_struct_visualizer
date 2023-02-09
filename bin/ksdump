@@ -16,6 +16,8 @@ require 'kaitai/struct/visualizer'
 
 # ======================================================================
 
+FORMATS = %w[json xml yaml].freeze
+
 options = { format: 'yaml' }
 parser = OptionParser.new do |opts|
   prog_name = File.basename($PROGRAM_NAME)
@@ -27,7 +29,6 @@ parser = OptionParser.new do |opts|
     options[:import_path] = v
   end
 
-  FORMATS = %w[json xml yaml].freeze
   opts.on('-f', '--format FORMAT', FORMATS, "choose dump format - #{FORMATS.join(', ')} (default: #{options[:format]})") do |v|
     options[:format] = v
   end
