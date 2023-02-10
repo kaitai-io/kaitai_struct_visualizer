@@ -167,7 +167,16 @@ module Kaitai::Struct::Visualizer
     def explore
       return if @explored
 
-      @value = @parent.value.send(@value_method) if @value.nil?
+      if @value.nil?
+        @value = @parent.value.send(@value_method)
+        clean_id = @id[0] == '@' ? @id[1..-1] : @id
+        debug_el = @parent.value._debug[clean_id]
+        # raise "Unable to get debugging aid for: #{@parent.value._debug.inspect} using ID '#{clean_id}'" unless debug_el
+        if debug_el
+          @pos1 = debug_el[:start]
+          @pos2 = debug_el[:end]
+        end
+      end
 
       @explored = true
 
