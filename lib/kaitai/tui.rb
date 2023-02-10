@@ -13,11 +13,11 @@ module Kaitai
       if TUI.windows?
         require 'kaitai/console_windows'
         @console = ConsoleWindows.new
-        @highlight_colors = %i[white aqua blue green white]
+        @highlight_colors = %i[bright_white bright_cyan cyan gray]
       else
         require 'kaitai/console_ansi'
         @console = ConsoleANSI.new
-        @highlight_colors = %i[gray14 gray11 gray8 gray5 gray2]
+        @highlight_colors = %i[bright_white bright_cyan cyan gray]
       end
     end
 
