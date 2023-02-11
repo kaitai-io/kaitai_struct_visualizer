@@ -35,6 +35,21 @@ module Kaitai
       print @seq_clear
     end
 
+    def refresh
+    end
+
+    def print(*args)
+      Kernel.print(*args)
+    end
+
+    def puts(*args)
+      Kernel.puts(*args)
+    end
+
+    def readline
+      Readline.readline('', false)
+    end
+
     # Put the cursor up to screen position (x, y). First line is 0, first column is 0.
     def goto(x, y)
       # print `tput cup #{y} #{x}`

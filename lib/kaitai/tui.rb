@@ -5,7 +5,7 @@ require 'forwardable'
 module Kaitai
   class TUI
     extend Forwardable
-    def_delegators :@console, :rows, :cols, :goto, :clear, :fg_color=, :bg_color=, :reset_colors, :read_char_mapped
+    def_delegators :@console, :rows, :cols, :goto, :clear, :fg_color=, :bg_color=, :reset_colors, :read_char_mapped, :refresh, :print, :puts
 
     attr_reader :highlight_colors
 
@@ -15,8 +15,13 @@ module Kaitai
         @console = ConsoleWindows.new
         @highlight_colors = %i[white aqua blue green white]
       else
-        require 'kaitai/console_ansi'
-        @console = ConsoleANSI.new
+        begin
+          require 'kaitai/console_curses'
+          @console = ConsoleCurses.new
+        rescue LoadError
+          require 'kaitai/console_ansi'
+          @console = ConsoleANSI.new
+        end
         @highlight_colors = %i[gray14 gray11 gray8 gray5 gray2]
       end
     end
@@ -61,7 +66,7 @@ module Kaitai
       print ' ', header, ' '
 
       goto(11, top_y + 1)
-      Readline.readline('', false)
+      @console.readline
     end
 
     def draw_rectangle(x, y, w, h, charset = DOUBLE_CHARSET)
@@ -86,6 +91,10 @@ module Kaitai
     def draw_button(x, y, _w, caption)
       goto(x, y)
       puts "[ #{caption} ]"
+    end
+
+    def printf(*args)
+      @console.print sprintf(*args)
     end
 
     # Regexp borrowed from
