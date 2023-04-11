@@ -100,19 +100,19 @@ module Kaitai
       black: 0,
       blue: 1,
       green: 2,
-      aqua: 3,
+      cyan: 3,
       red: 4,
-      purple: 5,
+      magenta: 5,
       yellow: 6,
       white: 7,
       gray: 8,
-      light_blue: 9,
-      light_green: 0xa,
-      light_aqua: 0xb,
-      light_red: 0xc,
-      light_purple: 0xd,
-      light_yellow: 0xe,
-      bright_white: 0xf
+      bright_blue: 9,
+      bright_green: 10,
+      bright_cyan: 11,
+      bright_red: 12,
+      bright_magenta: 13,
+      bright_yellow: 14,
+      bright_white: 15
     }.freeze
 
     def fg_color=(col)

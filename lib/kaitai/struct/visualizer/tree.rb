@@ -173,12 +173,12 @@ module Kaitai::Struct::Visualizer
       if @ln == @cur_line
         # Seeking cur_node by cur_line
         @cur_node = n
-        @ui.bg_color = :gray
+        @ui.bg_color = :white
         @ui.fg_color = :black
       elsif @cur_node == n
         # Seeking cur_line by cur_node
         @cur_line = @ln
-        @ui.bg_color = :gray
+        @ui.bg_color = :white
         @ui.fg_color = :black
       end
 
