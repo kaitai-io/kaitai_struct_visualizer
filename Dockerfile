@@ -1,7 +1,7 @@
 FROM ruby
 
 # Download Kaitai Struct compiler deb
-RUN curl -LO https://github.com/kaitai-io/kaitai_struct_compiler/releases/download/0.10/kaitai-struct-compiler_0.10_all.deb
+RUN curl -fsSLO https://github.com/kaitai-io/kaitai_struct_compiler/releases/download/0.10/kaitai-struct-compiler_0.10_all.deb
 
 # Install it + Java + cleanup
 RUN apt-get update \
