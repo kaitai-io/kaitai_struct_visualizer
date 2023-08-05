@@ -132,4 +132,4 @@ when 'yaml'
   r = r[4..-1] if r[0..3] == "---\n"
 end
 
-print r
+puts r
