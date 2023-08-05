@@ -24,7 +24,6 @@ module Kaitai::Struct::Visualizer
       gpath = File.expand_path('*.rb', dname)
 
       Dir.glob(gpath) do |fn|
-        @out.puts "Loading: #{fn}"
         require File.expand_path(fn, dname)
       end
 
@@ -75,11 +74,8 @@ module Kaitai::Struct::Visualizer
         log = JSON.parse(log_str)
 
         # FIXME: add log results check
-        @out.puts 'Compilation OK'
 
         fns.each_with_index do |fn, idx|
-          @out.puts "... processing #{fn} #{idx}"
-
           log_fn = log[fn] || log[fn.gsub('/', '\\')]
           if log_fn['errors']
             report_err(log_fn['errors'])
@@ -94,7 +90,6 @@ module Kaitai::Struct::Visualizer
                 compiled_name = v['files'][0]['fileName']
                 compiled_path = File.join(code_dir, compiled_name)
 
-                @out.puts "...... loading #{compiled_name}"
                 require compiled_path
               end
             end
@@ -111,8 +106,6 @@ module Kaitai::Struct::Visualizer
       if errs
         @out.puts 'Fatal errors encountered, cannot continue'
         exit 1
-      else
-        @out.puts "Classes loaded OK, main class = #{main_class_name}"
       end
 
       main_class_name
