@@ -6,11 +6,22 @@ require 'optparse'
 # Some additional magic to make it work right after repo checkout,
 # without installation to proper Ruby library dirs
 
-full_bin_path = File.realpath($PROGRAM_NAME)
-dist_path = File.expand_path(File.dirname(full_bin_path) + '/..')
-
-$LOAD_PATH << "#{dist_path}/lib"
-$LOAD_PATH << "#{dist_path}/../runtime/ruby/lib"
+# The `__dir__` method is supposed to provide the real absolute path of the
+# `bin/` directory (which this script is in), but it can technically return
+# `nil` or a dot `"."` (in an "irb" session) instead. Normally, it shouldn't
+# happen unless some very unusual startup method is used, but if it happens,
+# we'll skip adding the dirs to $LOAD_PATH and wait for a miracle (which might
+# be that the dependencies we need are already available via $LOAD_PATH because
+# they are installed as gems, for example).
+#
+# See also
+# * https://stackoverflow.com/a/2206731
+# * https://makandracards.com/makandra/42122-ruby-__file__-__dir__-and-symlinks
+script_dir = __dir__
+unless script_dir.nil? || script_dir == '.'
+  $LOAD_PATH << File.expand_path('../lib', script_dir)
+  $LOAD_PATH << File.expand_path('../../runtime/ruby/lib', script_dir)
+end
 
 require 'kaitai/struct/visualizer'
 
