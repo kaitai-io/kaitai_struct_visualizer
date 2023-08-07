@@ -34,12 +34,6 @@ module Kaitai::Struct::Visualizer
         root[k] = v unless v.nil?
       end
 
-      # obj.instance_variables.each { |k|
-      #   k = k.to_s
-      #   next if k =~ /^@_/
-      #   el = obj.instance_eval(k)
-      #   root[k[1..-1]] = obj_to_h(el)
-      # }
       root
     end
   end
