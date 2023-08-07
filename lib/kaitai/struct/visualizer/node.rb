@@ -239,14 +239,8 @@ module Kaitai::Struct::Visualizer
         attrs = Set.new(@value.class::SEQ_FIELDS)
 
         # Gather instances
-        common_meths = Set.new
-        @value.class.ancestors.each do |cl|
-          next if cl == @value.class
-
-          common_meths.merge(cl.instance_methods)
-        end
-        inst_meths = Set.new(@value.public_methods) - common_meths
-        inst_meths.each do |meth|
+        prop_meths = obj.public_methods(false)
+        prop_meths.each do |meth|
           k = meth.to_s
           next if k =~ /^_/ || attrs.include?(k)
 

@@ -93,23 +93,14 @@ def obj_to_h(obj)
   elsif obj.is_a?(Array)
     obj.map { |x| obj_to_h(x) }
   else
+    return "OPAQUE (#{obj.class})" unless obj.is_a?(Kaitai::Struct::Struct)
+
     root = {}
-    valid_struct = false
 
-    common_meths = Set.new
-    obj.class.ancestors.each do |cl|
-      next if cl == obj.class
-
-      valid_struct = true if cl == Kaitai::Struct::Struct
-      common_meths.merge(cl.instance_methods)
-    end
-
-    return "OPAQUE (#{obj.class})" unless valid_struct
-
-    inst_meths = Set.new(obj.public_methods) - common_meths
-    inst_meths.sort.each do |meth|
+    prop_meths = obj.public_methods(false)
+    prop_meths.sort.each do |meth|
       k = meth.to_s
-      next if k =~ /^_/ # or attrs.include?(k)
+      next if k =~ /^_/
 
       el = obj.send(meth)
       v = obj_to_h(el)
