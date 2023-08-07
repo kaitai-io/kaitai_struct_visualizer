@@ -231,31 +231,5 @@ module Kaitai::Struct::Visualizer
         @hv.shift_x
       end
     end
-
-    def self.explore_object(obj, level)
-      root = Node.new(obj, level)
-      if obj.is_a?(Integer) || obj.is_a?(String)
-        # do nothing else
-      elsif obj.is_a?(Array)
-        root = Node.new(obj, level)
-        obj.each_with_index do |el, i|
-          n = explore_object(el, level + 1)
-          n.id = i
-          root.add(n)
-        end
-      else
-        root = Node.new(obj, level)
-        obj.instance_variables.each do |k|
-          k = k.to_s
-          next if k =~ /^@_/
-
-          el = obj.instance_eval(k)
-          n = explore_object(el, level + 1)
-          n.id = k
-          root.add(n)
-        end
-      end
-      root
-    end
   end
 end
