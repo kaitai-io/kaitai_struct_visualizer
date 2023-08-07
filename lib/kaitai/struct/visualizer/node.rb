@@ -239,7 +239,7 @@ module Kaitai::Struct::Visualizer
         attrs = Set.new(@value.class::SEQ_FIELDS)
 
         # Gather instances
-        prop_meths = obj.public_methods(false)
+        prop_meths = @value.public_methods(false)
         prop_meths.each do |meth|
           k = meth.to_s
           next if k =~ /^_/ || attrs.include?(k)
