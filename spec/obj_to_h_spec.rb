@@ -4,6 +4,7 @@ require 'kaitai/struct/visualizer/obj_to_h'
 require 'kaitai/struct/struct'
 
 module Kaitai::Struct::Visualizer
+  # rubocop:disable Lint/UnderscorePrefixedVariableName
   class SimpleKSObject < Kaitai::Struct::Struct
     attr_reader :foo
 
@@ -46,6 +47,7 @@ module Kaitai::Struct::Visualizer
       @instance_field
     end
   end
+  # rubocop:enable Lint/UnderscorePrefixedVariableName
 
   describe :obj_to_h do
     it 'dumps a simple KS object' do
