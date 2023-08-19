@@ -1,0 +1,8 @@
+# For gems, Gemfile.lock is *not* supposed to be checked in: https://yehudakatz.com/2010/12/16/clarifying-the-roles-of-the-gemspec-and-gemfile/
+Gemfile.lock
+
+# Avoid accidentally committing any .gem files which might be built manually
+*.gem
+
+# /out/ is used to keep ksc .deb files downloaded
+/out

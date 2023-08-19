@@ -1,6 +1,13 @@
 #!/bin/sh -ef
 
-curl -fsSLO https://github.com/kaitai-io/kaitai_struct_compiler/releases/download/0.10/kaitai-struct-compiler_0.10_all.deb
+KSC_VERSION=0.10
+KSC_DEB_FILE="kaitai-struct-compiler_${KSC_VERSION}_all.deb"
+
+cd "$(dirname "$0")"/..
+
+mkdir -p out
+cd out
+curl -fsSLO "https://github.com/kaitai-io/kaitai_struct_compiler/releases/download/$KSC_VERSION/$KSC_DEB_FILE"
 
 apt-get -y install openjdk-17-jre-headless
-apt-get -y install ./kaitai-struct-compiler_0.10_all.deb
+apt-get -y install "./$KSC_DEB_FILE"

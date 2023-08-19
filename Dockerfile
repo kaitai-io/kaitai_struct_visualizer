@@ -5,8 +5,8 @@ COPY . /app
 
 # Install ksc + Java + cleanup
 RUN apt-get update \
-       && /app/.build/restore-deb.sh \
-       && rm -rf /var/lib/apt/lists/* ./kaitai-struct-compiler_0.10_all.deb
+       && .build/restore-deb.sh \
+       && rm -rf /var/lib/apt/lists/*
 
 # Build and install gem
 RUN cd /app \
