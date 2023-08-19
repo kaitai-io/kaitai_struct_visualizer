@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 module Kaitai::Struct::Visualizer
-
   # Recursively convert object received from Kaitai Struct to a hash.
   # Used by ksdump to prepare data for JSON/XML/YAML output.
   def self.obj_to_h(obj)
