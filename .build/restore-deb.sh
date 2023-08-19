@@ -9,5 +9,6 @@ mkdir -p out
 cd out
 curl -fsSLO "https://github.com/kaitai-io/kaitai_struct_compiler/releases/download/$KSC_VERSION/$KSC_DEB_FILE"
 
+apt-get update
 apt-get -y install openjdk-17-jre-headless
 apt-get -y install "./$KSC_DEB_FILE"

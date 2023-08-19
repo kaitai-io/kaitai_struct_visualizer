@@ -4,8 +4,7 @@ FROM ruby:3.2
 COPY . /app
 
 # Install ksc + Java + cleanup
-RUN apt-get update \
-       && .build/restore-deb.sh \
+RUN /app/.build/restore-deb.sh \
        && rm -rf /var/lib/apt/lists/*
 
 # Build and install gem

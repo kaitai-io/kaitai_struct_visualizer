@@ -13,10 +13,10 @@ jobs:
       - uses: actions/checkout@v3
       - name: restore
         run: sudo .build/restore-deb.sh
-      - name: restore bundler
-        run: sudo apt-get -y install bundler
-      - name: install dev-time ruby dependencies
-        run: sudo bundle install
+      - uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: '3.2'
+          bundler-cache: true
       - name: test
         run: rspec
       - name: rubocop
