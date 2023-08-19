@@ -77,7 +77,7 @@ raise exc if exc
 
 # ======================================================================
 
-tree = Kaitai::Struct::Visualizer::obj_to_h(app.data)
+tree = Kaitai::Struct::Visualizer.obj_to_h(app.data)
 r = nil
 
 case options[:format]
