@@ -163,24 +163,24 @@ module Kaitai
       "\r" => :enter,
 
       # Regular AT keyboard arrows
-      E0_ESCAPE + 'H' => :up_arrow,
-      E0_ESCAPE + 'P' => :down_arrow,
-      E0_ESCAPE + 'K' => :left_arrow,
-      E0_ESCAPE + 'M' => :right_arrow,
-      E0_ESCAPE + 'I' => :pg_up,
-      E0_ESCAPE + 'Q' => :pg_dn,
-      E0_ESCAPE + 'G' => :home,
-      E0_ESCAPE + 'O' => :end,
+      "#{E0_ESCAPE}H" => :up_arrow,
+      "#{E0_ESCAPE}P" => :down_arrow,
+      "#{E0_ESCAPE}K" => :left_arrow,
+      "#{E0_ESCAPE}M" => :right_arrow,
+      "#{E0_ESCAPE}I" => :pg_up,
+      "#{E0_ESCAPE}Q" => :pg_dn,
+      "#{E0_ESCAPE}G" => :home,
+      "#{E0_ESCAPE}O" => :end,
 
       # Keypad
-      ZERO_ESCAPE + 'H' => :up_arrow,
-      ZERO_ESCAPE + 'P' => :down_arrow,
-      ZERO_ESCAPE + 'K' => :left_arrow,
-      ZERO_ESCAPE + 'M' => :right_arrow,
-      ZERO_ESCAPE + 'I' => :pg_up,
-      ZERO_ESCAPE + 'Q' => :pg_dn,
-      ZERO_ESCAPE + 'G' => :home,
-      ZERO_ESCAPE + 'O' => :end
+      "#{ZERO_ESCAPE}H" => :up_arrow,
+      "#{ZERO_ESCAPE}P" => :down_arrow,
+      "#{ZERO_ESCAPE}K" => :left_arrow,
+      "#{ZERO_ESCAPE}M" => :right_arrow,
+      "#{ZERO_ESCAPE}I" => :pg_up,
+      "#{ZERO_ESCAPE}Q" => :pg_dn,
+      "#{ZERO_ESCAPE}G" => :home,
+      "#{ZERO_ESCAPE}O" => :end
     }.freeze
 
     def message_box_exception(e)
