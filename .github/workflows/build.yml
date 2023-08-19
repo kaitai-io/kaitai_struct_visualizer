@@ -18,9 +18,9 @@ jobs:
           ruby-version: '3.2'
           bundler-cache: true
       - name: test
-        run: rspec
+        run: bundle exec rspec
       - name: rubocop
-        run: rubocop || true
+        run: bundle exec rubocop || true
       - name: gem build
         run: gem build kaitai-struct-visualizer
       - uses: actions/upload-artifact@v3
