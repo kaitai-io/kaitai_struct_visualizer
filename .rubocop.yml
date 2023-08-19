@@ -16,6 +16,9 @@ Style/FormatStringToken:
 Style/MultipleComparison:
   Enabled: false
 
+Style/StderrPuts:
+  Enabled: false
+
 Style/TernaryParentheses:
   Enabled: false
 
