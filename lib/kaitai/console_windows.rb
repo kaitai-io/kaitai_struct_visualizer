@@ -5,8 +5,7 @@ require 'readline'
 
 module Kaitai
   class ConsoleWindows
-    attr_reader :cols
-    attr_reader :rows
+    attr_reader :cols, :rows
 
     kernel32 = Fiddle.dlopen('kernel32')
 

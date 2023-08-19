@@ -5,8 +5,7 @@ require 'readline'
 
 module Kaitai
   class ConsoleANSI
-    attr_reader :cols
-    attr_reader :rows
+    attr_reader :cols, :rows
 
     def initialize
       load_term_size

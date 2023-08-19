@@ -6,14 +6,8 @@ require 'kaitai/struct/visualizer/version'
 
 module Kaitai::Struct::Visualizer
   class Node
-    attr_accessor :id
-    attr_reader :value
-    attr_reader :level
-    attr_reader :pos1
-    attr_reader :pos2
-    attr_reader :children
-    attr_accessor :parent
-    attr_accessor :type
+    attr_accessor :id, :parent, :type
+    attr_reader :value, :level, :pos1, :pos2, :children
 
     def initialize(tree, value, level, value_method = nil, pos1 = nil, pos2 = nil)
       @tree = tree

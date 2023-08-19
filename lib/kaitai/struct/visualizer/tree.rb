@@ -54,11 +54,9 @@ module Kaitai::Struct::Visualizer
           unless @hv_hidden
             hv_update_io
 
-            unless @cur_node.pos1.nil?
-              if (@hv.addr < @cur_node.pos1) || (@hv.addr >= @cur_node.pos2)
-                @hv.addr = @cur_node.pos1
-                @hv.ensure_visible
-              end
+            if !@cur_node.pos1.nil? && ((@hv.addr < @cur_node.pos1) || (@hv.addr >= @cur_node.pos2))
+              @hv.addr = @cur_node.pos1
+              @hv.ensure_visible
             end
 
             @hv.redraw
