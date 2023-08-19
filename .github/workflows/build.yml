@@ -12,7 +12,7 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - name: restore
-        run: .build/restore-deb.sh
+        run: sudo .build/restore-deb.sh
       - name: install dev-time dependencies
         run: bundle install --development
       - name: test
