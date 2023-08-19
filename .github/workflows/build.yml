@@ -1,0 +1,27 @@
+name: build
+
+on:
+  push:
+    branches:
+      - master
+  pull_request: {}
+
+jobs:
+  linux:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: restore
+        run: .build/restore-deb.sh
+      - name: install dev-time dependencies
+        run: bundle install --development
+      - name: test
+        run: rspec
+      - name: rubocop
+        run: rubocop || true
+      - name: gem build
+        run: gem build kaitai-struct-visualizer
+      - uses: actions/upload-artifact@v2
+        with:
+          name: kaitai-struct-visualizer
+          path: kaitai-struct-visualizer-*.gem

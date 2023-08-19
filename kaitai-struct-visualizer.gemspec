@@ -31,8 +31,8 @@ Gem::Specification.new do |s|
   s.test_files = s.files.grep(%r{^(test|spec|features)/})
 
   s.add_development_dependency 'bundler', '~> 2.2', '>= 2.2.33'
-  s.add_development_dependency 'rake', '~> 12.3.3'
-  # s.add_development_dependency 'rspec', '~> 3'
+  s.add_development_dependency 'rspec', '~> 3'
+  s.add_development_dependency 'rubocop', '~> 1'
 
   s.add_dependency 'kaitai-struct', '~> 0.4'
 end
