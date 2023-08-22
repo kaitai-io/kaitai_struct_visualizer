@@ -76,7 +76,7 @@ module Kaitai::Struct::Visualizer
         # FIXME: add log results check
 
         fns.each_with_index do |fn, idx|
-          log_fn = log[fn] || log[fn.gsub('/', '\\')]
+          log_fn = log[fn]
           if log_fn['errors']
             report_err(log_fn['errors'])
             errs = true
