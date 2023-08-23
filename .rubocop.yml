@@ -1,4 +1,4 @@
-# RuboCop Default Config: https://github.com/rubocop-hq/rubocop/blob/master/config/default.yml
+# RuboCop Default Config: https://github.com/rubocop/rubocop/blob/master/config/default.yml
 
 AllCops:
   NewCops: enable
