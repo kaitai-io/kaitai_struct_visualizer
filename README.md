@@ -21,7 +21,7 @@ for details on `.ksy` files and general usage patterns.
 ## Downloading and installing
 
 ### Requirements
-- [ksc](http://kaitai.io/#quick-start) - kaitai-struct-compiler
+- [ksc](http://kaitai.io/#download) - kaitai-struct-compiler
 - [Java](https://openjdk.java.net/install/) 
 - [Ruby](https://www.ruby-lang.org/)
 
