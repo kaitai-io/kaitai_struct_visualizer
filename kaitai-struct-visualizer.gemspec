@@ -1,12 +1,10 @@
 # frozen_string_literal: true
 
 require File.expand_path('lib/kaitai/struct/visualizer/version', __dir__)
-require 'date'
 
 Gem::Specification.new do |s|
   s.name = 'kaitai-struct-visualizer'
   s.version = Kaitai::Struct::Visualizer::VERSION
-  s.date = Date.today.to_s
 
   s.authors = ['Mikhail Yakshin']
   s.email = 'greycat@kaitai.io'
