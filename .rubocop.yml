@@ -1,7 +1,7 @@
 # RuboCop Default Config: https://github.com/rubocop-hq/rubocop/blob/master/config/default.yml
 
 AllCops:
-  NewCops: disable
+  NewCops: enable
   TargetRubyVersion: 2.4
 
 Style/ClassAndModuleChildren:
