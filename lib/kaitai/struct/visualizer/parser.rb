@@ -36,6 +36,8 @@ module Kaitai::Struct::Visualizer
         load_exc = e
       rescue ArgumentError => e
         load_exc = e
+      rescue NoMethodError => e
+        load_exc = e
       end
 
       load_exc
