@@ -60,6 +60,27 @@ module Kaitai::Struct::Visualizer
         expect(parser.data.c).to be_nil
         expect(parser.data._debug['c']).to be_nil
       end
+
+      it 'handles nil access error in seq' do
+        opts = {}
+        compiler = KSYCompiler.new(opts)
+        parser = Parser.new(compiler, 'input/rely_on_nil.dat', ['formats/rely_on_nil.ksy'], opts)
+
+        exc = parser.load
+
+        # read_bytes(len) when len is nil blows up with ArgumentError: comparison of Integer with nil failed
+        expect(exc).to be_a(ArgumentError)
+
+        expect(parser.data.class::SEQ_FIELDS).to eq(%w[has_len has_body len body])
+        expect(parser.data.has_len).to eq(0)
+        expect(parser.data._debug['has_len']).to eq({ start: 0, end: 1 })
+        expect(parser.data.has_body).to eq(1)
+        expect(parser.data._debug['has_body']).to eq({ start: 1, end: 2 })
+        expect(parser.data.len).to be_nil
+        expect(parser.data._debug['len']).to be_nil
+        expect(parser.data.body).to be_nil
+        expect(parser.data._debug['body']).to eq({ start: 2 })
+      end
     end
   end
 end

@@ -34,6 +34,8 @@ module Kaitai::Struct::Visualizer
         load_exc = e
       rescue Kaitai::Struct::Visualizer::KSErrorMatcher => e
         load_exc = e
+      rescue ArgumentError => e
+        load_exc = e
       end
 
       load_exc
