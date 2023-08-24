@@ -4,7 +4,9 @@ require 'kaitai/struct/visualizer/ksy_compiler'
 
 module Kaitai::Struct::Visualizer
   describe KSYCompiler do
-    Dir.chdir('spec/formats_err')
+    before(:context) { @old_pwd = Dir.pwd; Dir.chdir('spec/formats_err') }
+    after(:context) { Dir.chdir(@old_pwd) }
+
     out = StringIO.new
     c = KSYCompiler.new({}, out)
 
