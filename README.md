@@ -22,7 +22,7 @@ for details on `.ksy` files and general usage patterns.
 
 ### Requirements
 - [ksc](http://kaitai.io/#download) - kaitai-struct-compiler
-- [Java](https://openjdk.java.net/install/) 
+- [Java](https://openjdk.java.net/install/)
 - [Ruby](https://www.ruby-lang.org/)
 
 ### From Ruby Gems repository
