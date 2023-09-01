@@ -13,7 +13,8 @@ jobs:
       - uses: actions/checkout@v3
       - name: restore
         run: sudo .build/restore-deb.sh
-      - id: ec_tmpdir
+      - name: create a temp dir to install editorconfig-checker
+        id: ec_tmpdir
         run: echo "path=$(mktemp -d -p "$RUNNER_TEMP")" >> "$GITHUB_OUTPUT"
       - name: install editorconfig-checker
         run: |
