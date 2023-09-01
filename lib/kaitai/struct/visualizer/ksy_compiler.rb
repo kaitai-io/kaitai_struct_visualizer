@@ -11,9 +11,24 @@ require 'psych'
 
 module Kaitai::Struct::Visualizer
   class KSYCompiler
+    # Initializes a new instance of the KSYCompiler class that is used to
+    # compile Kaitai Struct formats into Ruby classes by invoking the
+    # command line kaitai-struct-compiler.
+    #
+    # @param [Hash] opts Options
+    # @option opts [String] :outdir Output directory for compiled code; if
+    #   not specified, a temporary directory will be used that will be
+    #   deleted after the compilation is done
+    # @option opts [String] :import_path Additional import paths
+    # @option opts [String] :opaque_types "true" or "false" to enable or
+    #   disable opaque types
+    #
+    # @param [IO] out IO stream to write error/warning messages to
     def initialize(opts, out = $stderr)
       @opts = opts
       @out = out
+
+      @outdir = opts[:outdir]
     end
 
     def compile_formats_if(fns)
@@ -31,84 +46,132 @@ module Kaitai::Struct::Visualizer
       fname.split('_').map(&:capitalize).join
     end
 
+    # Compiles Kaitai Struct formats into Ruby classes by invoking the
+    # command line kaitai-struct-compiler, and loads the generated Ruby
+    # files into current Ruby interpreter by running `require` on them.
+    #
+    # If the :outdir option was specified, the compiled code will be
+    # stored in that directory. Otherwise, a temporary directory will be
+    # used that will be deleted after the compilation and loading is done.
+    #
+    # @param [Array<String>] fns List of Kaitai Struct format files to
+    #   compile
+    # @return [String] Main class name, or nil if were errors
     def compile_formats(fns)
-      errs = false
-      main_class_name = nil
-      Dir.mktmpdir do |code_dir|
-        args = ['--ksc-json-output', '--debug', '-t', 'ruby', '-d', code_dir, *fns]
-
-        # Extra arguments
-        extra = []
-        extra += ['--import-path', @opts[:import_path]] if @opts[:import_path]
-        extra += ['--opaque-types', @opts[:opaque_types]] if @opts[:opaque_types]
-
-        args = extra + args
-
-        # UNIX-based systems run ksc via a shell wrapper that requires
-        # extra '--' in invocation to disambiguate our '-d' from java runner
-        # '-d' (which allows to pass defines to JVM). Windows-based systems
-        # do not need and do not support this extra '--', so we don't add it
-        # on Windows.
-        args.unshift('--') unless Kaitai::TUI.windows?
-
-        log_str, err_str, status = Open3.capture3('kaitai-struct-compiler', *args)
-        unless status.success?
-          if status.exitstatus == 127
-            @out.puts 'ksv: unable to find and execute kaitai-struct-compiler in your PATH'
-          elsif err_str =~ /Error: Unknown option --ksc-json-output/
-            @out.puts 'ksv: your kaitai-struct-compiler is too old:'
-            system('kaitai-struct-compiler', '--version')
-            @out.puts "\nPlease use at least v0.7."
-          else
-            @out.puts "ksc crashed (exit status = #{status}):\n"
-            @out.puts "== STDOUT\n"
-            @out.puts log_str
-            @out.puts
-            @out.puts "== STDERR\n"
-            @out.puts err_str
-            @out.puts
-          end
-          exit status.exitstatus
-        end
-
-        log = JSON.parse(log_str)
-
-        # FIXME: add log results check
-
-        fns.each_with_index do |fn, idx|
-          log_fn = log[fn]
-          if log_fn['errors']
-            report_err(log_fn['errors'])
-            errs = true
-          else
-            log_classes = log_fn['output']['ruby']
-            log_classes.each_pair do |_k, v|
-              if v['errors']
-                report_err(v['errors'])
-                errs = true
-              else
-                compiled_name = v['files'][0]['fileName']
-                compiled_path = File.join(code_dir, compiled_name)
-
-                require compiled_path
-              end
-            end
-
-            # Is it main ClassSpecs?
-            if idx.zero?
-              main = log_classes[log_fn['firstSpecName']]
-              main_class_name = main['topLevelName']
-            end
-          end
-        end
+      if @outdir.nil?
+        main_class_name = nil
+        Dir.mktmpdir { |code_dir| main_class_name = compile_and_load(fns, code_dir) }
+      else
+        main_class_name = compile_and_load(fns, @outdir)
       end
 
-      if errs
+      if main_class_name.nil?
         @out.puts 'Fatal errors encountered, cannot continue'
         exit 1
       end
 
       main_class_name
+    end
+
+    # Compiles Kaitai Struct formats into Ruby classes by invoking the
+    # command line kaitai-struct-compiler, and loads the generated Ruby
+    # files into current Ruby interpreter by running `require` on them.
+    #
+    # @param [Array<String>] fns List of Kaitai Struct format files to
+    #   compile
+    # @param [String] code_dir Directory to store the compiled code in
+    # @return [String] Main class name, or nil if were errors
+    def compile_and_load(fns, code_dir)
+      log = compile_formats_to_output(fns, code_dir)
+      load_ruby_files(fns, code_dir, log)
+    end
+
+    # Compiles Kaitai Struct formats into Ruby classes by invoking the
+    # command line kaitai-struct-compiler.
+    #
+    # @param [Array<String>] fns List of Kaitai Struct format files to
+    #   compile
+    # @param [String] code_dir Directory to store the compiled code in
+    # @return [Hash] Structured output of kaitai-struct-compiler
+    def compile_formats_to_output(fns, code_dir)
+      args = ['--ksc-json-output', '--debug', '-t', 'ruby', '-d', code_dir, *fns]
+
+      # Extra arguments
+      extra = []
+      extra += ['--import-path', @opts[:import_path]] if @opts[:import_path]
+      extra += ['--opaque-types', @opts[:opaque_types]] if @opts[:opaque_types]
+
+      args = extra + args
+
+      # UNIX-based systems run ksc via a shell wrapper that requires
+      # extra '--' in invocation to disambiguate our '-d' from java runner
+      # '-d' (which allows to pass defines to JVM). Windows-based systems
+      # do not need and do not support this extra '--', so we don't add it
+      # on Windows.
+      args.unshift('--') unless Kaitai::TUI.windows?
+
+      log_str, err_str, status = Open3.capture3('kaitai-struct-compiler', *args)
+      unless status.success?
+        if status.exitstatus == 127
+          @out.puts 'ksv: unable to find and execute kaitai-struct-compiler in your PATH'
+        elsif err_str =~ /Error: Unknown option --ksc-json-output/
+          @out.puts 'ksv: your kaitai-struct-compiler is too old:'
+          system('kaitai-struct-compiler', '--version')
+          @out.puts "\nPlease use at least v0.7."
+        else
+          @out.puts "ksc crashed (exit status = #{status}):\n"
+          @out.puts "== STDOUT\n"
+          @out.puts log_str
+          @out.puts
+          @out.puts "== STDERR\n"
+          @out.puts err_str
+          @out.puts
+        end
+        exit status.exitstatus
+      end
+
+      JSON.parse(log_str)
+    end
+
+    # Loads Ruby files generated by kaitai-struct-compiler into current Ruby interpreter
+    # by running `require` on them.
+    #
+    # @param [Array<String>] fns List of Kaitai Struct format files that were compiled
+    # @param [String] code_dir Directory where the compiled Ruby files are stored
+    # @param [Hash] log Structured output of kaitai-struct-compiler
+    # @return [String] Main class name, or nil if were errors
+    def load_ruby_files(fns, code_dir, log)
+      errs = false
+      main_class_name = nil
+
+      fns.each_with_index do |fn, idx|
+        log_fn = log[fn]
+        if log_fn['errors']
+          report_err(log_fn['errors'])
+          errs = true
+        else
+          log_classes = log_fn['output']['ruby']
+          log_classes.each_pair do |_k, v|
+            if v['errors']
+              report_err(v['errors'])
+              errs = true
+            else
+              compiled_name = v['files'][0]['fileName']
+              compiled_path = File.join(code_dir, compiled_name)
+
+              require compiled_path
+            end
+          end
+
+          # Is it main ClassSpecs?
+          if idx.zero?
+            main = log_classes[log_fn['firstSpecName']]
+            main_class_name = main['topLevelName']
+          end
+        end
+      end
+
+      errs ? nil : main_class_name
     end
 
     def report_err(errs)
