@@ -13,6 +13,16 @@ jobs:
       - uses: actions/checkout@v3
       - name: restore
         run: sudo .build/restore-deb.sh
+      - id: ec_tmpdir
+        run: echo "path=$(mktemp -d -p "$RUNNER_TEMP")" >> "$GITHUB_OUTPUT"
+      - name: install editorconfig-checker
+        run: |
+          curl -fsSL -O https://github.com/editorconfig-checker/editorconfig-checker/releases/download/2.7.1/ec-linux-amd64.tar.gz
+          sha256sum -c -w "$GITHUB_WORKSPACE"/.github/checksums.txt
+          tar -xzvf ec-linux-amd64.tar.gz --strip-components 1 bin/ec-linux-amd64
+          mv ec-linux-amd64 editorconfig-checker
+          sudo install -p -t /usr/local/bin editorconfig-checker
+        working-directory: ${{ steps.ec_tmpdir.outputs.path }}
       - uses: ruby/setup-ruby@v1
         with:
           ruby-version: '3.2'
@@ -21,6 +31,10 @@ jobs:
         run: bundle exec rspec
       - name: rubocop
         run: bundle exec rubocop || true
+      - name: check for .editorconfig violations in non-Ruby files
+        # RuboCop has already checked Ruby files for issues that editorconfig-checker
+        # checks for, so we're excluding Ruby files here.
+        run: editorconfig-checker -exclude '^bin/ksdump$|^bin/ksv$|\.rb$|\.gemspec$|^Gemfile$'
       - name: gem build
         run: gem build kaitai-struct-visualizer
       - uses: actions/upload-artifact@v3
