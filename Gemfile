@@ -2,5 +2,11 @@
 
 source 'https://rubygems.org'
 
-# Actual dependencies are listed in `kaitai-struct-visualizer.gemspec`
+# Runtime dependencies are listed in `kaitai-struct-visualizer.gemspec`
 gemspec
+
+group :development do
+  gem 'bundler', '~> 2', '>= 2.2.33'
+  gem 'rspec', '~> 3'
+  gem 'rubocop', '~> 1', require: false
+end
