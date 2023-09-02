@@ -9,4 +9,5 @@ group :development do
   gem 'bundler', '~> 2', '>= 2.2.33'
   gem 'rspec', '~> 3'
   gem 'rubocop', '~> 1', require: false
+  gem 'rubocop-rspec', '~> 2', require: false
 end

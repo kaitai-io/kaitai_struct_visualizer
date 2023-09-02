@@ -1,5 +1,8 @@
 # RuboCop Default Config: https://github.com/rubocop/rubocop/blob/master/config/default.yml
 
+require:
+  - rubocop-rspec
+
 AllCops:
   NewCops: enable
   TargetRubyVersion: 2.4
