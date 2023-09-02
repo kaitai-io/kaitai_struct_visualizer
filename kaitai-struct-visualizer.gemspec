@@ -9,7 +9,7 @@ Gem::Specification.new do |s|
   s.authors = ['Mikhail Yakshin']
   s.email = 'greycat@kaitai.io'
 
-  s.homepage = 'http://kaitai.io'
+  s.homepage = 'https://kaitai.io/'
   s.summary = 'Advanced hex viewer and binary structure exploration tool (visualizer) using Kaitai Struct ksy files'
   s.license = 'GPL-3.0-or-later'
   s.metadata = {
