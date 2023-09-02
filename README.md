@@ -1,6 +1,6 @@
 # Kaitai Struct: visualizer
 
-This is a simple visualizer for [Kaitai Struct](https://github.com/kaitai-io/kaitai_struct) project.
+This is a console visualizer for the [Kaitai Struct](https://github.com/kaitai-io/kaitai_struct) project.
 
 ![screenshot](screenshot.png)
 
@@ -9,57 +9,93 @@ binary data structures, laid out in files or in memory: i.e. binary
 file formats, network stream packet formats, etc.
 
 The main idea is that a particular format is described in Kaitai
-Struct language (`.ksy` files) only once and then can be compiled with
-this compiler into source files in one of the supported programming
-languages. These modules will include a generated code for a parser
-that can read described data structure from a file / stream and give
-access to it in a nice, easy-to-comprehend API.
+Struct language (`.ksy` file) and then can be compiled with
+`ksc` into source files in one of the supported programming
+languages. These modules will contain generated code for a parser
+that can read the described data structure from a file / stream and provide
+access to it using a nice, easy-to-understand API.
 
-Please refer to [documentation in Kaitai Struct project](https://github.com/kaitai-io/kaitai_struct)
-for details on `.ksy` files and general usage patterns.
+See the [Kaitai Struct homepage](https://kaitai.io/) for details on `.ksy` files and general usage patterns.
 
 ## Downloading and installing
 
 ### Requirements
-- [ksc](http://kaitai.io/#download) - kaitai-struct-compiler
+
+- [ksc](https://kaitai.io/#download) - `kaitai-struct-compiler`
 - [Java](https://openjdk.java.net/install/)
-- [Ruby](https://www.ruby-lang.org/)
+- [Ruby](https://www.ruby-lang.org/) (latest Ruby 3.x recommended,
+  at least Ruby 2.4 required)
 
-### From Ruby Gems repository
+### From RubyGems repository
 
-KS visualizer is written in [Ruby](https://www.ruby-lang.org/) and is
-available as
-[.gem package](https://rubygems.org/gems/kaitai-struct-visualizer). Thus,
-you'll need Ruby (RubyGems package manager comes bundled with Ruby
-since v1.9) installed on your box, and then you can just run:
+Kaitai Struct visualizer is written in [Ruby](https://www.ruby-lang.org/) and is
+available [on RubyGems](https://rubygems.org/gems/kaitai-struct-visualizer). Thus,
+you'll need Ruby installed on your box and then you can just run:
 
 ```shell
 gem install kaitai-struct-visualizer
 ```
 
+---
+
+You can use `ksv --version` to check what versions of `ksv` and its dependencies are installed, for example:
+
+```console
+$ ksv --version
+kaitai-struct-visualizer 0.7
+kaitai-struct-compiler 0.11
+kaitai-struct 0.11 (Kaitai Struct runtime library for Ruby)
+```
+
+The versions of `kaitai-struct-compiler` and `kaitai-struct` should match. If not, see https://kaitai.io/#download for instructions how to install the latest version of `kaitai-struct-compiler` and/or use `gem update kaitai-struct` to update the [kaitai-struct](https://rubygems.org/gems/kaitai-struct) gem if needed.
+
 ### Source code
 
 If you're interested in developing the visualizer itself, you can check
-out source code in repository:
+out the source code from the [kaitai_struct_visualizer](https://github.com/kaitai-io/kaitai_struct_visualizer) GitHub repository:
 
 ```shell
-git clone https://github.com/kaitai-io/kaitai_struct_visualizer
+git clone https://github.com/kaitai-io/kaitai_struct_visualizer.git
 ```
 
+Then run `bundle install` to install dependencies. After that, you can run [`bin/ksv`](bin/ksv) or [`bin/ksdump`](bin/ksdump) right away (without having to install the `kaitai-struct-visualizer` gem first), which makes development easier.
+
 ## Usage
+
+There are two executables provided by this package:
+
+* `ksv` - interactive console visualizer with GUI
+* `ksdump` - command-line tool for dumping parsed data in JSON, XML or YAML format to standard output (_stdout_)
+
+The basic usage is similar for both programs:
 
 ```shell
 ksv <binary-file> <ksy-file>... | <rb-file>
 ```
 
-### Running with Docker
+For `ksdump`, it may be useful to change the output format with the `-f` option (the default is `yaml`) and redirect the output to a file so that your terminal is not flooded with thousands of lines (for larger input files):
 
-Running image from Docker Hub:
 ```shell
-docker run -v "$(pwd):/share" -it kaitai/ksv <binary-file> <ksy-file>
+ksdump -f json <binary-file> <ksy-file>... > output.json
 ```
 
-Rebuilding the image from local files:
+### Running with Docker
+
+This project is also available via the [kaitai/ksv](https://hub.docker.com/r/kaitai/ksv) image on Docker Hub. The default entrypoint is `ksv` (the interactive visualizer):
+
+```shell
+docker run --rm -it -v "$(pwd):/share" kaitai/ksv <binary-file> <ksy-file>
+```
+
+You can specify `ksdump` as the entrypoint like this (and note that we don't need the `-it` flags anymore because `ksdump` is not interactive - omitting them in fact allows you to distinguish the `ksdump`'s output to _stdout_ and _stderr_, see [this comment](https://github.com/kaitai-io/kaitai_struct_visualizer/issues/56#issuecomment-1666629764)):
+
+```shell
+docker run --rm -v "$(pwd):/share" --entrypoint ksdump kaitai/ksv -f json <binary-file> <ksy-file> > output.json
+```
+
+---
+
+Building the Docker image locally:
 ```shell
 docker build . --tag docker.io/kaitai/ksv
 ```
@@ -81,7 +117,9 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-Note that it applies only to compiler itself, not `.ksy` input files
+---
+
+Note that it applies only to visualizer itself, not `.ksy` input files
 that one supplies in normal process of compilation, nor to compiler's
 output files — that constitutes normal usage process and you obviously
 keep copyright to both.
