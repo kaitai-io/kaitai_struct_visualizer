@@ -1,6 +1,6 @@
 # Kaitai Struct: visualizer
 
-This is a console visualizer for the [Kaitai Struct](https://github.com/kaitai-io/kaitai_struct) project.
+This is a console visualizer for the [Kaitai Struct](https://kaitai.io/) project.
 
 ![screenshot](screenshot.png)
 
