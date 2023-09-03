@@ -15,7 +15,7 @@ module Kaitai::Struct::Visualizer
       it 'loads simple format successfully' do
         opts = {}
         compiler = KSYCompiler.new(opts)
-        parser = Parser.new(compiler, 'input/7bytes.dat', ['formats/simple.ksy'], opts)
+        parser = Parser.new(compiler, 'input/7bytes.bin', ['formats/simple.ksy'], opts)
 
         exc = parser.load
         expect(exc).to be_nil
@@ -30,7 +30,7 @@ module Kaitai::Struct::Visualizer
       it 'handles EOF error in seq' do
         opts = {}
         compiler = KSYCompiler.new(opts)
-        parser = Parser.new(compiler, 'input/7bytes.dat', ['formats/partial_seq.ksy'], opts)
+        parser = Parser.new(compiler, 'input/7bytes.bin', ['formats/partial_seq.ksy'], opts)
 
         exc = parser.load
 
@@ -46,7 +46,7 @@ module Kaitai::Struct::Visualizer
       it 'handles validation error in seq' do
         opts = {}
         compiler = KSYCompiler.new(opts)
-        parser = Parser.new(compiler, 'input/7bytes.dat', ['formats/valid_fail.ksy'], opts)
+        parser = Parser.new(compiler, 'input/7bytes.bin', ['formats/valid_fail.ksy'], opts)
 
         exc = parser.load
 
@@ -64,7 +64,7 @@ module Kaitai::Struct::Visualizer
       it 'handles nil usage in size in seq' do
         opts = {}
         compiler = KSYCompiler.new(opts)
-        parser = Parser.new(compiler, 'input/rely_on_nil.dat', ['formats/rely_on_nil.ksy'], opts)
+        parser = Parser.new(compiler, 'input/rely_on_nil.bin', ['formats/rely_on_nil.ksy'], opts)
 
         exc = parser.load
 
@@ -85,7 +85,7 @@ module Kaitai::Struct::Visualizer
       it 'handles nil access error in seq' do
         opts = {}
         compiler = KSYCompiler.new(opts)
-        parser = Parser.new(compiler, 'input/rely_on_nil.dat', ['formats/rely_on_nil2.ksy'], opts)
+        parser = Parser.new(compiler, 'input/rely_on_nil.bin', ['formats/rely_on_nil2.ksy'], opts)
 
         exc = parser.load
 
