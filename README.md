@@ -21,7 +21,7 @@ See the [Kaitai Struct homepage](https://kaitai.io/) for details on `.ksy` files
 
 ### Requirements
 
-- [ksc](https://kaitai.io/#download) - `kaitai-struct-compiler`
+- [ksc](https://kaitai.io/#download) — `kaitai-struct-compiler`
 - [Java](https://openjdk.java.net/install/)
 - [Ruby](https://www.ruby-lang.org/) (latest Ruby 3.x recommended,
   at least Ruby 2.4 required)
@@ -64,8 +64,8 @@ Then run `bundle install` to install dependencies. After that, you can run [`bin
 
 There are two executables provided by this package:
 
-* `ksv` - interactive console visualizer with GUI
-* `ksdump` - command-line tool for dumping parsed data in JSON, XML or YAML format to standard output (_stdout_)
+* `ksv` — interactive console visualizer with GUI
+* `ksdump` — command-line tool for dumping parsed data in JSON, XML or YAML format to standard output (_stdout_)
 
 The basic usage is similar for both programs:
 
@@ -87,7 +87,7 @@ This project is also available via the [kaitai/ksv](https://hub.docker.com/r/kai
 docker run --rm -it -v "$(pwd):/share" kaitai/ksv <binary-file> <ksy-file>
 ```
 
-You can specify `ksdump` as the entrypoint like this (and note that we don't need the `-it` flags anymore because `ksdump` is not interactive - omitting them in fact allows you to distinguish the `ksdump`'s output to _stdout_ and _stderr_, see [this comment](https://github.com/kaitai-io/kaitai_struct_visualizer/issues/56#issuecomment-1666629764)):
+You can specify `ksdump` as the entrypoint like this (and note that we don't need the `-it` flags anymore because `ksdump` is not interactive — omitting them in fact allows you to distinguish the `ksdump`'s output to _stdout_ and _stderr_, see [this comment](https://github.com/kaitai-io/kaitai_struct_visualizer/issues/56#issuecomment-1666629764)):
 
 ```shell
 docker run --rm -v "$(pwd):/share" --entrypoint ksdump kaitai/ksv -f json <binary-file> <ksy-file> > output.json
