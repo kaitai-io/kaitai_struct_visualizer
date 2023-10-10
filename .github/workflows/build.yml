@@ -10,7 +10,7 @@ jobs:
   linux:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - name: restore
         run: sudo .build/restore-deb.sh
       - name: create a temp dir to install editorconfig-checker
