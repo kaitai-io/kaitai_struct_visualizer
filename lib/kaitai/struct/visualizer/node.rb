@@ -108,11 +108,7 @@ module Kaitai::Struct::Visualizer
             raise "Invalid str_mode: #{@str_mode.inspect}"
           end
 
-          s ||= ''
-          if s.length > max_len
-            s = s[0, max_len - 1] || ''
-            s += '…'
-          end
+          s = clamp_string(s, max_len)
           print s
         elsif (@value == true) || (@value == false)
           print " = #{@value}"
@@ -120,10 +116,28 @@ module Kaitai::Struct::Visualizer
           print ' = null'
         elsif @value.is_a?(Array)
           printf ' (%d = 0x%x entries)', @value.size, @value.size
+        elsif @value.public_methods(false).include?(:inspect)
+          s = @value.inspect
+          pos += 3
+          max_len = @tree.tree_width - pos
+          if s.is_a?(String)
+            print " = #{clamp_string(s, max_len)}"
+          else
+            print " = #{clamp_string(s.class.to_s, max_len)}"
+          end
         end
       end
 
       puts
+    end
+
+    def clamp_string(s, max_len)
+      s ||= ''
+      if s.length > max_len
+        s = s[0, max_len - 1] || ''
+        s += '…'
+      end
+      s
     end
 
     def first_n_bytes_dump(s, n)
@@ -236,7 +250,7 @@ module Kaitai::Struct::Visualizer
         prop_meths = @value.public_methods(false)
         prop_meths.each do |meth|
           k = meth.to_s
-          next if k =~ /^_/ || attrs.include?(k)
+          next if k =~ /^_/ || attrs.include?(k) || meth == :inspect
 
           n = Node.new(@tree, nil, level + 1, meth)
           n.id = k
