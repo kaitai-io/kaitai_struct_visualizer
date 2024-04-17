@@ -18,7 +18,7 @@ jobs:
         run: echo "path=$(mktemp -d -p "$RUNNER_TEMP")" >> "$GITHUB_OUTPUT"
       - name: install editorconfig-checker
         run: |
-          curl -fsSL -O https://github.com/editorconfig-checker/editorconfig-checker/releases/download/2.7.2/ec-linux-amd64.tar.gz
+          curl -fsSL -O https://github.com/editorconfig-checker/editorconfig-checker/releases/download/v3.0.1/ec-linux-amd64.tar.gz
           sha256sum -c -w "$GITHUB_WORKSPACE"/.github/checksums.txt
           tar -xzvf ec-linux-amd64.tar.gz --strip-components 1 bin/ec-linux-amd64
           mv ec-linux-amd64 editorconfig-checker
