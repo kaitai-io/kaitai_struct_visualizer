@@ -102,7 +102,7 @@ docker build . --tag docker.io/kaitai/ksv
 
 ## Licensing
 
-Kaitai Struct visualizer is copyright (C) 2015-2023 Kaitai Project.
+Kaitai Struct visualizer is copyright (C) 2015-2024 Kaitai Project.
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
