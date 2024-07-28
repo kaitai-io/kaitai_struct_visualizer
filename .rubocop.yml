@@ -6,6 +6,8 @@ require:
 AllCops:
   NewCops: enable
   TargetRubyVersion: 2.4
+  Exclude:
+    - spec/compiled/*.rb
 
 Style/ClassAndModuleChildren:
   Enabled: false
