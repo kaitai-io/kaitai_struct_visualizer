@@ -15,7 +15,9 @@ Gem::Specification.new do |s|
   s.metadata = {
     'bug_tracker_uri' => 'https://github.com/kaitai-io/kaitai_struct_visualizer/issues',
     'homepage_uri' => s.homepage,
-    'source_code_uri' => 'https://github.com/kaitai-io/kaitai_struct_visualizer'
+    'source_code_uri' => 'https://github.com/kaitai-io/kaitai_struct_visualizer',
+    # See https://guides.rubygems.org/mfa-requirement-opt-in/
+    'rubygems_mfa_required' => 'true'
   }
   s.description = <<~DESC
     Kaitai Struct is a declarative language used for describe various binary data structures, laid out in files or in memory: i.e. binary file formats, network stream packet formats, etc.
