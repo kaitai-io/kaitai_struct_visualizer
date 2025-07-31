@@ -1,6 +1,6 @@
 # RuboCop Default Config: https://github.com/rubocop/rubocop/blob/master/config/default.yml
 
-require:
+plugins:
   - rubocop-rspec
 
 AllCops:
