@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require 'kaitai/struct/visualizer/ksy_compiler'
+require 'stringio'
 
 module Kaitai::Struct::Visualizer
   describe KSYCompiler do
