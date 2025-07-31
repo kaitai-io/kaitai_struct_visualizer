@@ -34,5 +34,5 @@ Gem::Specification.new do |s|
   s.test_files = s.files.grep(%r{^(test|spec|features)/})
 
   s.add_dependency 'kaitai-struct', '~> 0.4'
-  s.add_dependency 'benchmark', '>= 0.1.0'
+  s.add_dependency 'benchmark', '>= 0.1.0', '< 0.5.0'
 end
