@@ -31,8 +31,7 @@ Gem::Specification.new do |s|
 
   s.files = Dir['lib/**/*.rb'] + Dir['bin/*'] + Dir['spec/*']
   s.executables = s.files.grep(%r{^bin/}) { |f| File.basename(f) }
-  s.test_files = s.files.grep(%r{^(test|spec|features)/})
 
-  s.add_dependency 'kaitai-struct', '~> 0.4'
   s.add_dependency 'benchmark', '>= 0.1.0', '< 0.5.0'
+  s.add_dependency 'kaitai-struct', '~> 0.4'
 end
