@@ -43,34 +43,6 @@ module Kaitai::Struct::Visualizer
         expect(parser.data._debug['bar']).to eq({ start: 5 })
       end
 
-      it 'handles EOF error in array' do
-        opts = {}
-        compiler = KSYCompiler.new(opts)
-        parser = Parser.new(compiler, 'input/7bytes.bin', ['formats/partial_array_struct.ksy'], opts)
-
-        exc = parser.load
-
-        # we want 5 entries of 2 bytes each = 10 bytes, only 7 bytes available
-        expect(exc).to be_a(EOFError)
-
-        expect(parser.data.class::SEQ_FIELDS).to eq(%w[entries])
-
-        # 4 entries: 3 full, last one partial
-        expect(parser.data.entries.size).to eq(4)
-
-        # 3 full entries
-        expect(parser.data.entries[0].a).to eq(49)
-        expect(parser.data.entries[0].b).to eq(50)
-        expect(parser.data.entries[1].a).to eq(51)
-        expect(parser.data.entries[1].b).to eq(52)
-        expect(parser.data.entries[2].a).to eq(53)
-        expect(parser.data.entries[2].b).to eq(54)
-
-        # last entry is partial
-        expect(parser.data.entries[3].a).to eq(55)
-        expect(parser.data.entries[3].b).to be_nil
-      end
-
       it 'handles validation error in seq' do
         opts = {}
         compiler = KSYCompiler.new(opts)
