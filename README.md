@@ -26,7 +26,7 @@ See the [Kaitai Struct homepage](https://kaitai.io/) for details on `.ksy` files
   [JDK or JRE](https://whichjdk.com/#what-is-the-difference-between-jdk-and-jre) at your option
 - [Ruby](https://www.ruby-lang.org/) (the latest Ruby 3.x recommended, at least Ruby 2.4 required)
 
-### From RubyGems repository
+### From the RubyGems repository
 
 Kaitai Struct visualizer is written in [Ruby](https://www.ruby-lang.org/) and is
 available [on RubyGems](https://rubygems.org/gems/kaitai-struct-visualizer). Thus,
@@ -70,13 +70,13 @@ There are two executables provided by this package:
 The basic usage is similar for both programs:
 
 ```shell
-ksv <binary-file> <ksy-file>... | <rb-file>
+ksv <file_to_parse.bin> <format.ksy>|<format.rb>
 ```
 
 For `ksdump`, it may be useful to change the output format with the `-f` option (the default is `yaml`) and redirect the output to a file so that your terminal is not flooded with thousands of lines (for larger input files):
 
 ```shell
-ksdump -f json <binary-file> <ksy-file>... > output.json
+ksdump -f json <file_to_parse.bin> <format.ksy> > output.json
 ```
 
 ### Running with Docker
@@ -84,13 +84,13 @@ ksdump -f json <binary-file> <ksy-file>... > output.json
 This project is also available via the [kaitai/ksv](https://hub.docker.com/r/kaitai/ksv) image on Docker Hub. The default entrypoint is `ksv` (the interactive visualizer):
 
 ```shell
-docker run --rm -it -v "$(pwd):/share" kaitai/ksv <binary-file> <ksy-file>
+docker run --rm -it -v "$(pwd):/share" kaitai/ksv <file_to_parse.bin> <format.ksy>
 ```
 
 You can specify `ksdump` as the entrypoint like this (and note that we don't need the `-it` flags anymore because `ksdump` is not interactive — omitting them in fact allows you to distinguish the `ksdump`'s output to _stdout_ and _stderr_, see [this comment](https://github.com/kaitai-io/kaitai_struct_visualizer/issues/56#issuecomment-1666629764)):
 
 ```shell
-docker run --rm -v "$(pwd):/share" --entrypoint ksdump kaitai/ksv -f json <binary-file> <ksy-file> > output.json
+docker run --rm -v "$(pwd):/share" --entrypoint ksdump kaitai/ksv -f json <file_to_parse.bin> <format.ksy> > output.json
 ```
 
 ---
