@@ -35,5 +35,5 @@ Gem::Specification.new do |s|
   s.executables = s.files.grep(%r{^bin/}) { |f| File.basename(f) }
 
   s.add_dependency 'benchmark', '>= 0.1.0', '< 0.5.0'
-  s.add_dependency 'kaitai-struct', '~> 0.4'
+  s.add_dependency 'kaitai-struct', '~> 0.7'
 end
