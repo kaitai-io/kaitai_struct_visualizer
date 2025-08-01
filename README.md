@@ -22,9 +22,9 @@ See the [Kaitai Struct homepage](https://kaitai.io/) for details on `.ksy` files
 ### Requirements
 
 - [ksc](https://kaitai.io/#download) — `kaitai-struct-compiler`
-- [Java](https://openjdk.java.net/install/)
-- [Ruby](https://www.ruby-lang.org/) (latest Ruby 3.x recommended,
-  at least Ruby 2.4 required)
+- [Java](https://whichjdk.com/) (the latest LTS version 21 recommended, at least Java 8 required),
+  [JDK or JRE](https://whichjdk.com/#what-is-the-difference-between-jdk-and-jre) at your option
+- [Ruby](https://www.ruby-lang.org/) (the latest Ruby 3.x recommended, at least Ruby 2.4 required)
 
 ### From RubyGems repository
 
