@@ -26,7 +26,7 @@ jobs:
       - name: test
         run: bundle exec rspec --force-color
       - name: rubocop
-        run: bundle exec rubocop --no-parallel --debug --color || true
+        run: bundle exec rubocop --color || true
       - name: check for .editorconfig violations in non-Ruby files
         # RuboCop has already checked Ruby files for issues that editorconfig-checker
         # checks for, so we're excluding Ruby files here.
