@@ -246,15 +246,6 @@ module Kaitai
       puts "[ #{caption} ]"
     end
 
-    # Regexp borrowed from
-    # http://stackoverflow.com/questions/170956/how-can-i-find-which-operating-system-my-ruby-program-is-running-on
-    @@is_windows = (RUBY_PLATFORM =~ /cygwin|mswin|mingw|bccwin|wince|emx/) ? true : false
-
-    # Detects if current platform is Windows-based.
-    def self.windows?
-      @@is_windows
-    end
-
     private
 
     def current_color_code
