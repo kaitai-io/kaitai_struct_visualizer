@@ -250,7 +250,10 @@ module Kaitai::Struct::Visualizer
         prop_meths = @value.public_methods(false)
         prop_meths.each do |meth|
           k = meth.to_s
-          next if k =~ /^_/ || attrs.include?(k) || meth == :inspect
+          # NB: we don't need to consider `_unnamed*` attributes here
+          # (https://github.com/kaitai-io/kaitai_struct/issues/1064) because
+          # only `seq` fields can be unnamed, not `instances`
+          next if k.start_with?('_') || attrs.include?(k) || meth == :inspect
 
           n = Node.new(@tree, nil, level + 1, meth)
           n.id = k
