@@ -118,12 +118,12 @@ module Kaitai::Struct::Visualizer
           printf ' (%d = 0x%x entries)', @value.size, @value.size
         elsif @value.public_methods(false).include?(:to_s)
           s = @value.to_s
-          pos += 3
+          pos += 2
           max_len = @tree.tree_width - pos
           if s.is_a?(String)
-            print " = #{clamp_string(s, max_len)}"
+            print ": #{clamp_string(s, max_len)}"
           else
-            print " = #{clamp_string(s.class.to_s, max_len)}"
+            print ": #{clamp_string(s.class.to_s, max_len)}"
           end
         end
       end
