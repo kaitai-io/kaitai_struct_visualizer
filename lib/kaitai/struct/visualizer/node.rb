@@ -116,8 +116,8 @@ module Kaitai::Struct::Visualizer
           print ' = null'
         elsif @value.is_a?(Array)
           printf ' (%d = 0x%x entries)', @value.size, @value.size
-        elsif @value.public_methods(false).include?(:inspect)
-          s = @value.inspect
+        elsif @value.public_methods(false).include?(:to_s)
+          s = @value.to_s
           pos += 3
           max_len = @tree.tree_width - pos
           if s.is_a?(String)
@@ -253,7 +253,7 @@ module Kaitai::Struct::Visualizer
           # NB: we don't need to consider `_unnamed*` attributes here
           # (https://github.com/kaitai-io/kaitai_struct/issues/1064) because
           # only `seq` fields can be unnamed, not `instances`
-          next if k.start_with?('_') || attrs.include?(k) || meth == :inspect
+          next if k.start_with?('_') || attrs.include?(k) || meth == :to_s
 
           n = Node.new(@tree, nil, level + 1, meth)
           n.id = k

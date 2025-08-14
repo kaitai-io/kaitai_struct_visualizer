@@ -27,7 +27,7 @@ module Kaitai::Struct::Visualizer
       prop_meths = obj.public_methods(false)
       prop_meths.sort.each do |meth|
         k = meth.to_s
-        next if (k.start_with?('_') && !k.start_with?('_unnamed')) || meth == :inspect
+        next if (k.start_with?('_') && !k.start_with?('_unnamed')) || meth == :to_s
 
         el = obj.send(meth)
         v = obj_to_h(el)
