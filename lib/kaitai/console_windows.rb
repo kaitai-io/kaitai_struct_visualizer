@@ -71,7 +71,7 @@ module Kaitai
 
     def clear
       con_size = @buf_cols * @buf_rows
-      num_written = 'XXXX'.dup
+      num_written = +'XXXX'
       FILL_CONSOLE_OUTPUT_CHARACTER.call(
         @stdout_handle,
         0x20, # ' '

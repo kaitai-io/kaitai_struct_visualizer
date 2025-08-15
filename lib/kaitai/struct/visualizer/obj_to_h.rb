@@ -10,7 +10,7 @@ module Kaitai::Struct::Visualizer
       obj.to_s
     elsif obj.is_a?(String)
       if obj.encoding == Encoding::ASCII_8BIT
-        r = ''.dup
+        r = +''
         obj.each_byte { |x| r << format('%02X ', x) }
         r.chop!
         r
