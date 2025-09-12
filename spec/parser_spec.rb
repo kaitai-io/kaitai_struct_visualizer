@@ -68,8 +68,8 @@ module Kaitai::Struct::Visualizer
 
         exc = parser.load
 
-        # read_bytes(len) when len is nil blows up with ArgumentError: comparison of Integer with nil failed
-        expect(exc).to be_a(ArgumentError)
+        # read_bytes(len) when len is nil blows up with "TypeError: no implicit conversion from nil to integer"
+        expect(exc).to be_a(TypeError)
 
         expect(parser.data.class::SEQ_FIELDS).to eq(%w[has_len has_body len body])
         expect(parser.data.has_len).to eq(0)
