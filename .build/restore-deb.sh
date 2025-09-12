@@ -1,6 +1,6 @@
 #!/bin/sh -ef
 
-KSC_VERSION=0.10
+KSC_VERSION=0.11
 KSC_DEB_FILE="kaitai-struct-compiler_${KSC_VERSION}_all.deb"
 
 cd "$(dirname "$0")"/..
