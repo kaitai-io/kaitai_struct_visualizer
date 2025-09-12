@@ -179,20 +179,22 @@ module Kaitai::Struct::Visualizer
       errs.each do |err|
         @out << err['file']
 
-        row = nil
-        col = nil
+        row = err['line']
+        col = err['col']
 
-        begin
-          node = resolve_yaml_path(err['file'], err['path'])
+        if row.nil? && err['path']
+          begin
+            node = resolve_yaml_path(err['file'], err['path'])
 
-          # Psych line numbers are 0-based, but we want 1-based
-          row = node.start_line + 1
+            # Psych line numbers are 0-based, but we want 1-based
+            row = node.start_line + 1
 
-          # Psych column numbers are 0-based, but we want 1-based
-          col = node.start_column + 1
-        rescue StandardError
-          row = '!'
-          col = '!'
+            # Psych column numbers are 0-based, but we want 1-based
+            col = node.start_column + 1
+          rescue StandardError
+            row = '!'
+            col = '!'
+          end
         end
 
         if row
