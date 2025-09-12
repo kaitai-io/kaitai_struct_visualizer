@@ -58,7 +58,7 @@ module Kaitai::Struct::Visualizer
           c.report_err(err)
           expect(out.string).to eq(
             "Error:\n\n" \
-            "attr_bad_if2.ksy:18:12:/types/foo_type/instances/foo/if: invalid type: expected boolean, got CalcIntType\n"
+            "attr_bad_if2.ksy:18:13:/types/foo_type/instances/foo/if: invalid type: expected boolean, got CalcIntType\n"
           )
         end
       end

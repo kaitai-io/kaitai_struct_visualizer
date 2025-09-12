@@ -188,8 +188,8 @@ module Kaitai::Struct::Visualizer
           # Psych line numbers are 0-based, but we want 1-based
           row = node.start_line + 1
 
-          # We're fine with 0-based columns
-          col = node.start_column
+          # Psych column numbers are 0-based, but we want 1-based
+          col = node.start_column + 1
         rescue StandardError
           row = '!'
           col = '!'
