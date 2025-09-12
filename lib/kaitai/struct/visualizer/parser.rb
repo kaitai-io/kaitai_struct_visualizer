@@ -40,6 +40,10 @@ module Kaitai::Struct::Visualizer
         load_exc = e
       rescue TypeError => e
         load_exc = e
+      rescue Errno::EINVAL => e
+        # Raised by the runtime library's seek() implementation for negative offsets, see
+        # https://github.com/kaitai-io/kaitai_struct_ruby_runtime/blob/0fa62e64949f68cb001b58b7b45e15580d154ac9/lib/kaitai/struct/struct.rb#L637
+        load_exc = e
       end
 
       load_exc
