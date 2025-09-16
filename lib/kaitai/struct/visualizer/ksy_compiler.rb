@@ -23,9 +23,12 @@ module Kaitai::Struct::Visualizer
     # @option opts [String] :opaque_types "true" or "false" to enable or
     #   disable opaque types
     #
+    # @param [String] prog_name Program name to be used as a prefix in
+    #   error messages
     # @param [IO] out IO stream to write error/warning messages to
-    def initialize(opts, out = $stderr)
+    def initialize(opts, prog_name = 'ksv', out = $stderr)
       @opts = opts
+      @prog_name = prog_name
       @out = out
 
       @outdir = opts[:outdir]
@@ -113,12 +116,12 @@ module Kaitai::Struct::Visualizer
       begin
         log_str, err_str, status = Open3.capture3('kaitai-struct-compiler', *args)
       rescue Errno::ENOENT
-        @out.puts 'ksv: unable to find and execute kaitai-struct-compiler in your PATH'
+        @out.puts "#{@prog_name}: unable to find and execute kaitai-struct-compiler in your PATH"
         exit 1
       end
       unless status.success?
         if err_str =~ /Error: Unknown option --ksc-json-output/
-          @out.puts 'ksv: your kaitai-struct-compiler is too old:'
+          @out.puts "#{@prog_name}: your kaitai-struct-compiler is too old:"
           system('kaitai-struct-compiler', '--version')
           @out.puts "\nPlease use at least v0.7."
         else

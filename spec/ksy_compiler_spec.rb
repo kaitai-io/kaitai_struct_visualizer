@@ -7,7 +7,7 @@ module Kaitai::Struct::Visualizer
   describe KSYCompiler do
     before(:each) do
       @out = StringIO.new
-      @c = KSYCompiler.new({}, @out)
+      @c = KSYCompiler.new({}, 'ksv', @out)
     end
 
     context 'handling good formats' do

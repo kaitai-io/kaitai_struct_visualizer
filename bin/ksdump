@@ -30,10 +30,9 @@ require 'kaitai/struct/visualizer/obj_to_h'
 
 FORMATS = %w[json xml yaml].freeze
 
+prog_name = File.basename($PROGRAM_NAME)
 options = { format: 'yaml' }
 parser = OptionParser.new do |opts|
-  prog_name = File.basename($PROGRAM_NAME)
-
   opts.banner = "Usage: #{prog_name} [options] <file_to_parse.bin> <format.ksy>..."
   opts.separator ''
 
@@ -48,7 +47,7 @@ parser = OptionParser.new do |opts|
   opts.on('--version', "show versions of #{prog_name}, ksc and kaitai-struct (Kaitai Struct runtime library for Ruby)") do |_v|
     puts "#{prog_name} #{Kaitai::Struct::Visualizer::VERSION}"
     if system('kaitai-struct-compiler', '--version').nil?
-      $stderr.puts "#{prog_name}: unable to find and run kaitai-struct-compiler in your PATH"
+      $stderr.puts "#{prog_name}: unable to find and execute kaitai-struct-compiler in your PATH"
       exit 1
     end
     require 'kaitai/struct/struct'
@@ -70,7 +69,7 @@ if ARGV.size < 2
   exit 1
 end
 
-c = Kaitai::Struct::Visualizer::KSYCompiler.new(options)
+c = Kaitai::Struct::Visualizer::KSYCompiler.new(options, prog_name)
 app = Kaitai::Struct::Visualizer::Parser.new(c, ARGV[0], ARGV[1..-1], options)
 exc = app.load
 raise exc if exc
