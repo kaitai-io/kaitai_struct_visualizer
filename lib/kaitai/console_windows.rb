@@ -22,8 +22,6 @@ module Kaitai
     SET_CONSOLE_CURSOR_POSITION = Fiddle::Function.new(kernel32['SetConsoleCursorPosition'], [handle, dword], dword)
     SET_CONSOLE_TEXT_ATTRIBUTE = Fiddle::Function.new(kernel32['SetConsoleTextAttribute'], [handle, dword], dword)
 
-    WRITE_CONSOLE = Fiddle::Function.new(kernel32['WriteConsole'], [handle, ptr, dword, ptr, ptr], dword)
-
     GETCH = Fiddle::Function.new(Fiddle.dlopen('msvcrt')['_getch'], [], word)
 
     def initialize
@@ -61,13 +59,6 @@ module Kaitai
     end
 
     attr_writer :on_resize
-
-    def puts(s)
-      Kernel.puts s
-      # num_written = 'XXXX'
-      # reserved = 'XXXX'
-      # WRITE_CONSOLE.call(@stdout_handle, s, s.length, num_written, reserved)
-    end
 
     def clear
       con_size = @buf_cols * @buf_rows
@@ -183,10 +174,6 @@ module Kaitai
       "#{ZERO_ESCAPE}O" => :end
     }.freeze
 
-    def message_box_exception(e)
-      message_box('Error while parsing', e.message)
-    end
-
     SINGLE_CHARSET = '┌┐└┘─│'
     HEAVY_CHARSET  = '┏┓┗┛━┃'
     DOUBLE_CHARSET = '╔╗╚╝═║'
@@ -197,54 +184,6 @@ module Kaitai
     CHAR_BR = 3
     CHAR_H  = 4
     CHAR_V  = 5
-
-    def message_box(header, msg)
-      top_y = @rows / 2 - 5
-      draw_rectangle(10, top_y, @cols - 20, 10)
-      goto(@cols / 2 - (header.length / 2) - 1, top_y)
-      print ' ', header, ' '
-      goto(11, top_y + 1)
-      puts msg
-      draw_button(@cols / 2 - 10, top_y + 8, 10, 'OK')
-      loop do
-        c = read_char_mapped
-        return if c == :enter
-      end
-    end
-
-    def input_str(header, _msg)
-      top_y = @rows / 2 - 5
-      draw_rectangle(10, top_y, @cols - 20, 10)
-      goto(@cols / 2 - (header.length / 2) - 1, top_y)
-      print ' ', header, ' '
-
-      goto(11, top_y + 1)
-      Readline.readline('', false)
-    end
-
-    def draw_rectangle(x, y, w, h, charset = DOUBLE_CHARSET)
-      goto(x, y)
-      print charset[CHAR_TL]
-      print charset[CHAR_H] * (w - 2)
-      print charset[CHAR_TR]
-
-      ((y + 1)..(y + h - 1)).each do |i|
-        goto(x, i)
-        print charset[CHAR_V]
-        print ' ' * (w - 2)
-        print charset[CHAR_V]
-      end
-
-      goto(x, y + h)
-      print charset[CHAR_BL]
-      print charset[CHAR_H] * (w - 2)
-      print charset[CHAR_BR]
-    end
-
-    def draw_button(x, y, _w, caption)
-      goto(x, y)
-      puts "[ #{caption} ]"
-    end
 
     private
 
