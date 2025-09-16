@@ -73,8 +73,6 @@ module Kaitai::Struct::Visualizer
 
         begin
           process_keypress
-        rescue EOFError => e
-          @ui.message_box_exception(e)
         rescue Kaitai::Struct::Visualizer::KSErrorMatcher => e
           @ui.message_box_exception(e)
         end

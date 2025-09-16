@@ -5,6 +5,15 @@ require 'kaitai/struct/struct'
 module Kaitai::Struct::Visualizer
   class KSErrorMatcher
     def self.===(exc)
+      return true if exc.is_a?(EOFError)
+      return true if exc.is_a?(ArgumentError)
+      return true if exc.is_a?(NoMethodError)
+      return true if exc.is_a?(TypeError)
+
+      # Raised by the runtime library's seek() implementation for negative offsets, see
+      # https://github.com/kaitai-io/kaitai_struct_ruby_runtime/blob/0fa62e64949f68cb001b58b7b45e15580d154ac9/lib/kaitai/struct/struct.rb#L637
+      return true if exc.is_a?(Errno::EINVAL)
+
       # KaitaiStructError is a common ancestor of all Validation*Error and
       # UndecidedEndiannessError classes since 0.9. However, it doesn't exist in
       # the runtime library before 0.9, so we first make sure it's defined
