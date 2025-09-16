@@ -110,11 +110,14 @@ module Kaitai::Struct::Visualizer
       # on Windows.
       args.unshift('--') unless Kaitai::TUI.windows?
 
-      log_str, err_str, status = Open3.capture3('kaitai-struct-compiler', *args)
+      begin
+        log_str, err_str, status = Open3.capture3('kaitai-struct-compiler', *args)
+      rescue Errno::ENOENT
+        @out.puts 'ksv: unable to find and execute kaitai-struct-compiler in your PATH'
+        exit 1
+      end
       unless status.success?
-        if status.exitstatus == 127
-          @out.puts 'ksv: unable to find and execute kaitai-struct-compiler in your PATH'
-        elsif err_str =~ /Error: Unknown option --ksc-json-output/
+        if err_str =~ /Error: Unknown option --ksc-json-output/
           @out.puts 'ksv: your kaitai-struct-compiler is too old:'
           system('kaitai-struct-compiler', '--version')
           @out.puts "\nPlease use at least v0.7."
