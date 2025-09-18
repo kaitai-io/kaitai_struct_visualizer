@@ -209,10 +209,10 @@ module Kaitai::Struct::Visualizer
 
         clean_id = @id[0] == '@' ? @id[1..-1] : @id
         debug_el = @parent.value._debug[clean_id]
-        raise "Unable to get debugging aid for array: #{@parent.value._debug.inspect} using ID '#{clean_id}'" unless debug_el
+        # raise "Unable to get debugging aid for array: #{@parent.value._debug.inspect} using ID '#{clean_id}'" unless debug_el
 
-        aid = debug_el[:arr]
-        raise "Unable to get debugging aid for array: #{debug_el.inspect}" unless aid
+        aid = (debug_el && debug_el[:arr]) || {}
+        # raise "Unable to get debugging aid for array: #{debug_el.inspect}" unless aid
 
         max_val_digits = @value.size.to_s.size
         fmt = "%#{max_val_digits}d"
