@@ -34,6 +34,8 @@ Gem::Specification.new do |s|
   s.files = Dir['lib/**/*.rb'] + Dir['bin/*'] + ['LICENSE', 'README.md']
   s.executables = s.files.grep(%r{^bin/}) { |f| File.basename(f) }
 
+  s.add_dependency 'activesupport', '>= 5.0.0', '< 9.0.0'
+  s.add_dependency 'builder', '~> 3.3'
   s.add_dependency 'benchmark', '>= 0.1.0', '< 0.5.0'
   s.add_dependency 'kaitai-struct', '~> 0.7'
 
