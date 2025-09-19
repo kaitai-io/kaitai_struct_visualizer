@@ -36,4 +36,6 @@ Gem::Specification.new do |s|
 
   s.add_dependency 'benchmark', '>= 0.1.0', '< 0.5.0'
   s.add_dependency 'kaitai-struct', '~> 0.7'
+
+  s.requirements << 'kaitai-struct-compiler (https://kaitai.io/#download), the version must match the kaitai-struct gem (check using `ksv --version`)'
 end
