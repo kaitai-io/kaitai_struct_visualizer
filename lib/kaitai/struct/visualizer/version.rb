@@ -3,7 +3,7 @@
 module Kaitai
   module Struct
     module Visualizer
-      VERSION = '0.7'
+      VERSION = '0.11'
     end
   end
 end

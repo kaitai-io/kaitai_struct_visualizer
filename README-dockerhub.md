@@ -42,7 +42,7 @@ You can use `ksv --version` to check what versions of `ksv` and its dependencies
 
 ```console
 $ ksv --version
-kaitai-struct-visualizer 0.7
+kaitai-struct-visualizer 0.11
 kaitai-struct-compiler 0.11
 kaitai-struct 0.11 (Kaitai Struct runtime library for Ruby)
 ```
