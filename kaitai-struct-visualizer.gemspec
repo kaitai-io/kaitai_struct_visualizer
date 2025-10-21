@@ -27,7 +27,7 @@ Gem::Specification.new do |s|
     This package is a visualizer tool for .ksy files. Given a particular binary file and .ksy file(s) that describe its format, it can visualize internal data structures in a tree form and a multi-level highlight hex viewer.
   DESC
 
-  s.required_ruby_version = '>= 2.4.0'
+  s.required_ruby_version = '>= 2.5.0'
   s.required_rubygems_version = Gem::Requirement.new('>= 0') if s.respond_to? :required_rubygems_version=
   s.require_paths = ['lib']
 

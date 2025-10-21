@@ -30,6 +30,23 @@ require 'kaitai/struct/visualizer/obj_to_h'
 
 FORMATS = %w[json xml yaml].freeze
 
+def format_tree(tree, format)
+  case format
+  when 'json'
+    require 'json'
+    JSON.pretty_generate(tree)
+  when 'xml'
+    require 'active_support'
+    require 'active_support/core_ext'
+    tree.to_xml
+  when 'yaml'
+    require 'yaml'
+    result = tree.to_yaml
+    result = result[4..-1] if result[0..3] == "---\n"
+    result
+  end
+end
+
 prog_name = File.basename($PROGRAM_NAME)
 options = { format: 'yaml' }
 parser = OptionParser.new do |opts|
@@ -72,25 +89,22 @@ end
 c = Kaitai::Struct::Visualizer::KSYCompiler.new(options, prog_name)
 app = Kaitai::Struct::Visualizer::Parser.new(c, ARGV[0], ARGV[1..-1], options)
 exc = app.load
-raise exc if exc
+
+if exc
+  $stderr.puts exc.full_message
+  $stderr.puts
+
+  # Show what we managed to parse before failing
+  $stderr.puts "Partial data successfully parsed before error:"
+  tree = Kaitai::Struct::Visualizer.obj_to_h(app.data)
+  result = format_tree(tree, options[:format])
+  puts result
+
+  exit 1
+end
 
 # ======================================================================
 
 tree = Kaitai::Struct::Visualizer.obj_to_h(app.data)
-r = nil
-
-case options[:format]
-when 'json'
-  require 'json'
-  r = JSON.pretty_generate(tree)
-when 'xml'
-  require 'active_support'
-  require 'active_support/core_ext'
-  r = tree.to_xml
-when 'yaml'
-  require 'yaml'
-  r = tree.to_yaml
-  r = r[4..-1] if r[0..3] == "---\n"
-end
-
-puts r
+result = format_tree(tree, options[:format])
+puts result
